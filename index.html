@@ -3,1219 +3,686 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محرر الأكواد الذكي للهواتف</title>
+    <title>محرر الأكواد للهواتف</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #007acc;
-            --primary-dark: #005a9e;
-            --secondary: #4cc9f0;
-            --success: #0d8a47;
-            --danger: #d13438;
-            --dark-bg: #0d1117;
-            --card-bg: #161b22;
-            --sidebar-bg: #0d1117;
-            --text: #e6edf3;
-            --text-secondary: #8b949e;
-            --border: #30363d;
-            --error-bg: rgba(241, 76, 76, 0.15);
-            --error-border: #f85149;
-            --success-bg: rgba(46, 160, 67, 0.15);
-            --success-border: #238636;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--dark-bg);
-            color: var(--text);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            padding: 10px;
+            direction: rtl;
         }
-
-        /* الشريط العلوي */
-        .navbar {
-            background: var(--card-bg);
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo i {
-            color: var(--secondary);
-            font-size: 1.5rem;
-        }
-
-        .logo h1 {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* المحتوى الرئيسي */
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* الشريط الجانبي */
-        .sidebar {
-            width: 250px;
-            background: var(--sidebar-bg);
-            border-left: 1px solid var(--border);
-            padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
-
-        .sidebar-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar-title {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .file-list {
-            list-style: none;
-        }
-
-        .file-item {
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .file-item:hover {
-            background: rgba(177, 186, 196, 0.12);
-        }
-
-        .file-item.active {
-            background: rgba(177, 186, 196, 0.12);
-            border-right: 2px solid var(--secondary);
-        }
-
-        .file-item i {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* منطقة التحرير */
-        .editor-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .editor-tabs {
-            display: flex;
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            overflow-x: auto;
-        }
-
-        .editor-tab {
-            padding: 12px 20px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .editor-tab.active {
-            color: var(--text);
-            border-bottom-color: var(--secondary);
-            background: rgba(177, 186, 196, 0.08);
-        }
-
-        .editor-tab i {
-            font-size: 0.9rem;
-        }
-
-        .editor-container {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .line-numbers {
-            width: 50px;
-            background: var(--card-bg);
-            color: var(--text-secondary);
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 15px 5px;
+        
+        header {
             text-align: center;
-            user-select: none;
-            overflow-y: auto;
-            border-left: 1px solid var(--border);
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .code-editor {
-            flex: 1;
-            background: var(--dark-bg);
-            color: var(--text);
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #4cc9f0;
+        }
+        
+        header p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .file-config {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
             padding: 15px;
-            border: none;
-            resize: none;
-            outline: none;
-            white-space: pre;
-            overflow: auto;
-            tab-size: 4;
-        }
-
-        /* منطقة الإخراج */
-        .output-area {
-            height: 35vh;
-            border-top: 1px solid var(--border);
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .output-header {
-            background: var(--card-bg);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .output-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        .output-title i {
-            color: var(--secondary);
-        }
-
-        .output-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-outline:hover {
-            background: rgba(177, 186, 196, 0.12);
-        }
-
-        .output-content {
-            flex: 1;
-            background: var(--dark-bg);
-            overflow: auto;
-            padding: 15px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-        }
-
-        /* إشعارات الأخطاء */
-        .error-panel {
-            background: var(--error-bg);
-            border-right: 3px solid var(--error-border);
-            padding: 12px 15px;
-            margin: 10px 20px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .error-panel i {
-            color: var(--error-border);
-        }
-
-        .success-panel {
-            background: var(--success-bg);
-            border-right: 3px solid var(--success-border);
-            padding: 12px 15px;
-            margin: 10px 20px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .success-panel i {
-            color: var(--success-border);
-        }
-
-        .error-line {
-            background: rgba(248, 81, 73, 0.15);
-            position: relative;
-        }
-
-        .error-line::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--error-border);
-        }
-
-        /* نافذة الباينات */
-        .stats-panel {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .stat-item {
+        
+        .config-item {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
-
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--secondary);
+        
+        .config-item label {
+            color: #4cc9f0;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        
+        .config-item input, .config-item select {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
         }
-
-        /* التكيف مع الهواتف */
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
+        
+        .config-item input:focus, .config-item select:focus {
+            outline: none;
+            border-color: #4cc9f0;
+        }
+        
+        .editor-container {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .editor-header {
+            background-color: #0f3460;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-header span {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .editor-header .language-badge {
+            background-color: #4cc9f0;
+            color: #16213e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .code-editor {
+            width: 100%;
+            min-height: 300px;
+            background-color: #1e1e2e;
+            color: #f8f8f2;
+            padding: 15px;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .code-editor:focus {
+            outline: none;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #4cc9f0;
+            color: #16213e;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3aa8cc;
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .footer {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.8rem;
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+        
+        .file-name-display {
+            color: #4cc9f0;
+            font-weight: bold;
+            background-color: rgba(76, 201, 240, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        /* تعليمات Syntax highlighting بسيطة */
+        .html-tag { color: #ff79c6; }
+        .css-selector { color: #8be9fd; }
+        .css-property { color: #50fa7b; }
+        .js-keyword { color: #ff79c6; }
+        .js-function { color: #50fa7b; }
+        .js-string { color: #f1fa8c; }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
             }
             
-            .sidebar {
-                width: 100%;
-                height: auto;
-                border-left: none;
-                border-bottom: 1px solid var(--border);
-                padding: 15px;
-            }
-            
-            .sidebar-section {
+            .file-config {
                 flex-direction: row;
-                flex-wrap: wrap;
-                gap: 5px;
+                justify-content: space-between;
             }
             
-            .file-item {
-                padding: 8px 12px;
-                font-size: 0.9rem;
+            .config-item {
+                flex: 1;
             }
             
-            .editor-tabs {
-                padding: 0 10px;
+            .code-editor {
+                min-height: 400px;
             }
-            
-            .editor-tab {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .btn span {
-                display: none;
-            }
-            
-            .btn {
-                padding: 10px;
-            }
-            
-            .output-area {
-                height: 30vh;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navbar {
-                padding: 12px 15px;
-            }
-            
-            .logo h1 {
-                font-size: 1.1rem;
-            }
-            
-            .editor-tab span {
-                display: none;
-            }
-            
-            .editor-tab {
-                padding: 10px;
-            }
-            
-            .code-editor, .line-numbers {
-                font-size: 13px;
-                padding: 12px;
-            }
-        }
-
-        /* تأثيرات */
-        @keyframes slideIn {
-            from {
-                transform: translateX(-10px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* شريط التمرير */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--dark-bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    <!-- شريط التنقل العلوي -->
-    <nav class="navbar">
-        <div class="logo">
-            <i class="fas fa-code"></i>
-            <h1>محرر الأكواد الذكي</h1>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-code"></i> محرر الأكواد للهواتف</h1>
+            <p>أنشئ، عدّل واحفظ ملفاتك البرمجية بسهولة</p>
+        </header>
+        
+        <div class="file-config">
+            <div class="config-item">
+                <label for="filename"><i class="fas fa-file"></i> اسم الملف</label>
+                <input type="text" id="filename" placeholder="مثال: index.html" value="index.html">
+            </div>
+            
+            <div class="config-item">
+                <label for="language"><i class="fas fa-language"></i> لغة البرمجة</label>
+                <select id="language">
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="php">PHP</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                </select>
+            </div>
         </div>
-        <div class="nav-controls">
-            <select class="btn btn-outline" id="languageSelect">
-                <option value="html">HTML</option>
-                <option value="css">CSS</option>
-                <option value="js">JavaScript</option>
-            </select>
-            <button class="btn btn-outline" id="themeToggle">
-                <i class="fas fa-moon"></i>
+        
+        <div class="editor-container">
+            <div class="editor-header">
+                <span><i class="fas fa-edit"></i> محرر الأكواد</span>
+                <div class="language-badge">HTML</div>
+            </div>
+            <textarea id="codeEditor" class="code-editor" placeholder="اكتب الكود هنا...">&lt;!DOCTYPE html&gt;
+&lt;html lang="ar" dir="rtl"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;مثال على HTML&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #4a6fa5;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;مرحباً بالعالم!&lt;/h1&gt;
+    &lt;p&gt;هذا مثال على صفحة HTML&lt;/p&gt;
+    &lt;script&gt;
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('الصفحة جاهزة!');
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+        </div>
+        
+        <div class="actions">
+            <button id="saveBtn" class="btn btn-primary">
+                <i class="fas fa-save"></i> حفظ الملف
+            </button>
+            <button id="clearBtn" class="btn btn-secondary">
+                <i class="fas fa-broom"></i> مسح المحرر
             </button>
         </div>
-    </nav>
-
-    <!-- المحتوى الرئيسي -->
-    <div class="main-content">
-        <!-- الشريط الجانبي -->
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">الملفات</div>
-                <ul class="file-list">
-                    <li class="file-item active" data-file="index.html">
-                        <i class="fab fa-html5"></i>
-                        <span>index.html</span>
-                    </li>
-                    <li class="file-item" data-file="style.css">
-                        <i class="fab fa-css3-alt"></i>
-                        <span>style.css</span>
-                    </li>
-                    <li class="file-item" data-file="script.js">
-                        <i class="fab fa-js"></i>
-                        <span>script.js</span>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="sidebar-title">إحصائيات</div>
-                <div class="stats-panel">
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value" id="linesCount">0</div>
-                            <div class="stat-label">عدد الأسطر</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="charsCount">0</div>
-                            <div class="stat-label">عدد الأحرف</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="errorsCount">0</div>
-                            <div class="stat-label">الأخطاء</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="warningsCount">0</div>
-                            <div class="stat-label">تحذيرات</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="sidebar-title">معلومات</div>
-                <div class="stats-panel">
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-                        <i class="fas fa-info-circle" style="color: var(--secondary); margin-left: 5px;"></i>
-                        المحرر يكتشف الأخطاء تلقائياً ويلونها باللون الأحمر
-                    </p>
-                </div>
-            </div>
-        </aside>
-
-        <!-- منطقة المحرر -->
-        <main class="editor-area">
-            <!-- ألسنة المحرر -->
-            <div class="editor-tabs">
-                <button class="editor-tab active" data-tab="html">
-                    <i class="fab fa-html5"></i>
-                    <span>index.html</span>
-                </button>
-                <button class="editor-tab" data-tab="css">
-                    <i class="fab fa-css3-alt"></i>
-                    <span>style.css</span>
-                </button>
-                <button class="editor-tab" data-tab="js">
-                    <i class="fab fa-js"></i>
-                    <span>script.js</span>
-                </button>
-            </div>
-
-            <!-- محرر الأكواد -->
-            <div class="editor-container">
-                <div class="line-numbers" id="lineNumbers">1</div>
-                <textarea class="code-editor" id="codeEditor" placeholder="اكتب كودك هنا..."></textarea>
-            </div>
-
-            <!-- منطقة الإخراج -->
-            <div class="output-area">
-                <div class="output-header">
-                    <div class="output-title">
-                        <i class="fas fa-terminal"></i>
-                        <span>نتيجة التنفيذ</span>
-                    </div>
-                    <div class="output-controls">
-                        <button class="btn btn-success" id="runBtn">
-                            <i class="fas fa-play"></i>
-                            <span>تشغيل</span>
-                        </button>
-                        <button class="btn btn-danger" id="clearBtn">
-                            <i class="fas fa-trash"></i>
-                            <span>مسح</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="output-content" id="output"></div>
-            </div>
-        </main>
+        
+        <div class="footer">
+            <p>الملف المحفوظ: <span id="savedFileName" class="file-name-display">لم يتم حفظ أي ملف بعد</span></p>
+            <p>محرر الأكواد يعمل على جميع أحجام الشاشات | تم التطوير باستخدام HTML5 و JavaScript</p>
+        </div>
     </div>
 
     <script>
-        // العناصر الرئيسية
+        // عناصر DOM
+        const filenameInput = document.getElementById('filename');
+        const languageSelect = document.getElementById('language');
         const codeEditor = document.getElementById('codeEditor');
-        const lineNumbers = document.getElementById('lineNumbers');
-        const output = document.getElementById('output');
-        const runBtn = document.getElementById('runBtn');
+        const saveBtn = document.getElementById('saveBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const languageSelect = document.getElementById('languageSelect');
-        const themeToggle = document.getElementById('themeToggle');
-        const fileItems = document.querySelectorAll('.file-item');
-        const editorTabs = document.querySelectorAll('.editor-tab');
-
-        // عناصر الإحصائيات
-        const linesCount = document.getElementById('linesCount');
-        const charsCount = document.getElementById('charsCount');
-        const errorsCount = document.getElementById('errorsCount');
-        const warningsCount = document.getElementById('warningsCount');
-
-        // البيانات الأولية
-        const files = {
-            'index.html': {
-                name: 'index.html',
-                language: 'html',
-                icon: 'fab fa-html5',
-                content: `<!DOCTYPE html>
+        const languageBadge = document.querySelector('.language-badge');
+        const savedFileName = document.getElementById('savedFileName');
+        
+        // أمثلة أكواد مبدئية لكل لغة
+        const codeExamples = {
+            html: `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي الأول</title>
-    <link rel="stylesheet" href="style.css">
+    <title>مثال على HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #4a6fa5;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>مرحباً بكم في موقعي</h1>
-            <p>هذا موقع تجريبي يمكنك تعديله</p>
-        </header>
-        
-        <main>
-            <section class="features">
-                <div class="feature-card">
-                    <i class="fas fa-code"></i>
-                    <h3>محرر أكواد</h3>
-                    <p>محرر سهل الاستخدام للهواتف</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bug"></i>
-                    <h3>كشف الأخطاء</h3>
-                    <p>اكتشاف الأخطاء وتلوينها تلقائياً</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>متجاوب</h3>
-                    <p>يعمل على جميع أحجام الشاشات</p>
-                </div>
-            </section>
-            
-            <button id="demoBtn" class="btn-primary">انقر هنا</button>
-            <p id="demoText"></p>
-        </main>
-        
-        <footer>
-            <p>تم التطوير باستخدام محرر الأكواد الذكي</p>
-        </footer>
-    </div>
-    
-    <script src="script.js"></script>
+    <h1>مرحباً بالعالم!</h1>
+    <p>هذا مثال على صفحة HTML</p>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('الصفحة جاهزة!');
+        });
+    <\/script>
 </body>
-</html>`
-            },
-            'style.css': {
-                name: 'style.css',
-                language: 'css',
-                icon: 'fab fa-css3-alt',
-                content: `/* أنماط CSS لموقعنا */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+</html>`,
+            
+            css: `/* مثال على كود CSS */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #333;
-    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    margin: 0;
     padding: 20px;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    padding: 20px;
 }
 
-header {
-    background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
-    color: white;
-    padding: 40px 30px;
+.header {
     text-align: center;
+    margin-bottom: 40px;
 }
 
-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-}
-
-header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-}
-
-.features {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    padding: 50px 30px;
-}
-
-.feature-card {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 30px 25px;
-    text-align: center;
-    flex: 1;
-    min-width: 250px;
-    max-width: 350px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: 1px solid #e9ecef;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.feature-card i {
-    font-size: 3rem;
-    color: #007acc;
-    margin-bottom: 20px;
-}
-
-.feature-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.feature-card p {
-    color: #666;
-    font-size: 1rem;
-}
-
-.btn-primary {
-    display: block;
-    margin: 30px auto;
-    padding: 15px 40px;
-    background: #0d8a47;
-    color: white;
+.button {
+    background-color: #4cc9f0;
+    color: #16213e;
     border: none;
+    padding: 12px 24px;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background: #0a6e38;
+.button:hover {
+    background-color: #3aa8cc;
+    transform: translateY(-2px);
+}`,
+            
+            javascript: `// مثال على كود JavaScript
+// دالة للترحيب بالمستخدم
+function greetUser(name) {
+    return \`مرحباً، \${name}! أهلاً بك في محرر الأكواد.\`;
 }
 
-footer {
-    background: #f8f9fa;
-    padding: 25px;
-    text-align: center;
-    border-top: 1px solid #e9ecef;
-    color: #666;
+// دالة لجمع رقمين
+function addNumbers(a, b) {
+    return a + b;
 }
 
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
+// دالة للتحقق من رقم زوجي
+function isEven(number) {
+    return number % 2 === 0;
+}
+
+// مثال على استخدام الدوال
+const userName = "أحمد";
+const greeting = greetUser(userName);
+console.log(greeting);
+
+const sum = addNumbers(5, 7);
+console.log(\`مجموع 5 و 7 هو: \${sum}\`);
+
+console.log(\`الرقم 10 \${isEven(10) ? 'زوجي' : 'فردي'}\`);
+console.log(\`الرقم 7 \${isEven(7) ? 'زوجي' : 'فردي'}\`);
+
+// مثال على مصفوفة و map
+const numbers = [1, 2, 3, 4, 5];
+const squaredNumbers = numbers.map(num => num * num);
+console.log(\`الأرقام المربعة: \${squaredNumbers}\`);`,
+            
+            python: `# مثال على كود Python
+# دالة للترحيب بالمستخدم
+def greet_user(name):
+    return f"مرحباً، {name}! أهلاً بك في محرر الأكواد."
+
+# دالة لجمع رقمين
+def add_numbers(a, b):
+    return a + b
+
+# دالة للتحقق من رقم زوجي
+def is_even(number):
+    return number % 2 == 0
+
+# دالة لحساب العامل الرياضي
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+# مثال على استخدام الدوال
+if __name__ == "__main__":
+    user_name = "أحمد"
+    greeting = greet_user(user_name)
+    print(greeting)
+    
+    total = add_numbers(5, 7)
+    print(f"مجموع 5 و 7 هو: {total}")
+    
+    print(f"الرقم 10 {'زوجي' if is_even(10) else 'فردي'}")
+    print(f"الرقم 7 {'زوجي' if is_even(7) else 'فردي'}")
+    
+    # حساب العامل الرياضي للرقم 5
+    fact_5 = factorial(5)
+    print(f"العامل الرياضي لـ 5 هو: {fact_5}")`,
+            
+            php: `<?php
+// مثال على كود PHP
+// دالة للترحيب بالمستخدم
+function greetUser($name) {
+    return "مرحباً، $name! أهلاً بك في محرر الأكواد.";
+}
+
+// دالة لجمع رقمين
+function addNumbers($a, $b) {
+    return $a + $b;
+}
+
+// دالة للتحقق من رقم زوجي
+function isEven($number) {
+    return $number % 2 == 0;
+}
+
+// مثال على استخدام الدوال
+$userName = "أحمد";
+$greeting = greetUser($userName);
+echo $greeting . "<br>";
+
+$sum = addNumbers(5, 7);
+echo "مجموع 5 و 7 هو: $sum <br>";
+
+echo "الرقم 10 " . (isEven(10) ? 'زوجي' : 'فردي') . "<br>";
+echo "الرقم 7 " . (isEven(7) ? 'زوجي' : 'فردي') . "<br>";
+
+// مثال على مصفوفة
+$numbers = [1, 2, 3, 4, 5];
+echo "الأرقام: " . implode(", ", $numbers) . "<br>";
+
+// حساب مجموع الأرقام
+$total = array_sum($numbers);
+echo "مجموع الأرقام: $total <br>";
+?>`,
+            
+            java: `// مثال على كود Java
+public class Main {
+    // دالة للترحيب بالمستخدم
+    public static String greetUser(String name) {
+        return "مرحباً، " + name + "! أهلاً بك في محرر الأكواد.";
     }
     
-    .features {
-        padding: 30px 20px;
-        gap: 20px;
-    }
-    
-    .feature-card {
-        min-width: 100%;
-    }
-}`
-            },
-            'script.js': {
-                name: 'script.js',
-                language: 'js',
-                icon: 'fab fa-js',
-                content: `// كود JavaScript التفاعلي
-document.addEventListener('DOMContentLoaded', function() {
-    // تعريف المتغيرات
-    const demoBtn = document.getElementById('demoBtn');
-    const demoText = document.getElementById('demoText');
-    
-    // حدث النقر على الزر
-    demoBtn.addEventListener('click', function() {
-        demoText.textContent = 'مرحباً! لقد ضغطت على الزر بنجاح!';
-        demoText.style.color = '#0d8a47';
-        demoText.style.fontWeight = 'bold';
-        demoText.style.padding = '15px';
-        demoText.style.backgroundColor = '#f0f9f0';
-        demoText.style.borderRadius = '8px';
-        demoText.style.marginTop = '20px';
-        
-        // تغيير لون الزر
-        this.style.backgroundColor = '#005a9e';
-        
-        // إشعار في الكونسول
-        console.log('تم النقر على الزر بنجاح!');
-    });
-    
-    // وظيفة إضافية لحساب الأرقام
-    function calculateSum(a, b) {
+    // دالة لجمع رقمين
+    public static int addNumbers(int a, int b) {
         return a + b;
     }
     
-    // اختبار الوظيفة
-    const result = calculateSum(10, 20);
-    console.log('ناتج الجمع هو: ' + result);
+    // دالة للتحقق من رقم زوجي
+    public static boolean isEven(int number) {
+        return number % 2 == 0;
+    }
     
-    // مصفوفة الميزات
-    const features = [
-        'محرر أكواد متقدم',
-        'كشف الأخطاء التلقائي',
-        'واجهة مستخدم جميلة',
-        'دعم HTML, CSS, JavaScript'
-    ];
+    // دالة لحساب العامل الرياضي
+    public static int factorial(int n) {
+        if (n == 0) {
+            return 1;
+        } else {
+            return n * factorial(n - 1);
+        }
+    }
     
-    // عرض الميزات في الكونسول
-    console.log('ميزات المحرر:');
-    features.forEach((feature, index) => {
-        console.log((index + 1) + '. ' + feature);
-    });
-});`
-            }
+    public static void main(String[] args) {
+        String userName = "أحمد";
+        String greeting = greetUser(userName);
+        System.out.println(greeting);
+        
+        int sum = addNumbers(5, 7);
+        System.out.println("مجموع 5 و 7 هو: " + sum);
+        
+        System.out.println("الرقم 10 " + (isEven(10) ? "زوجي" : "فردي"));
+        System.out.println("الرقم 7 " + (isEven(7) ? "زوجي" : "فردي"));
+        
+        // حساب العامل الرياضي للرقم 5
+        int fact5 = factorial(5);
+        System.out.println("العامل الرياضي لـ 5 هو: " + fact5);
+    }
+}`,
+            
+            cpp: `// مثال على كود C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+// دالة للترحيب بالمستخدم
+string greetUser(string name) {
+    return "مرحباً، " + name + "! أهلاً بك في محرر الأكواد.";
+}
+
+// دالة لجمع رقمين
+int addNumbers(int a, int b) {
+    return a + b;
+}
+
+// دالة للتحقق من رقم زوجي
+bool isEven(int number) {
+    return number % 2 == 0;
+}
+
+// دالة لحساب العامل الرياضي
+int factorial(int n) {
+    if (n == 0) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+int main() {
+    string userName = "أحمد";
+    string greeting = greetUser(userName);
+    cout << greeting << endl;
+    
+    int sum = addNumbers(5, 7);
+    cout << "مجموع 5 و 7 هو: " << sum << endl;
+    
+    cout << "الرقم 10 " << (isEven(10) ? "زوجي" : "فردي") << endl;
+    cout << "الرقم 7 " << (isEven(7) ? "زوجي" : "فردي") << endl;
+    
+    // حساب العامل الرياضي للرقم 5
+    int fact5 = factorial(5);
+    cout << "العامل الرياضي لـ 5 هو: " << fact5 << endl;
+    
+    return 0;
+}`
         };
-
-        // المتغيرات
-        let currentFile = 'index.html';
-        let errors = [];
-        let warnings = [];
-
-        // تهيئة المحرر
-        function initEditor() {
-            loadFile(currentFile);
-            updateLineNumbers();
-            updateStats();
+        
+        // امتدادات الملفات لكل لغة
+        const fileExtensions = {
+            html: '.html',
+            css: '.css',
+            javascript: '.js',
+            python: '.py',
+            php: '.php',
+            java: '.java',
+            cpp: '.cpp'
+        };
+        
+        // تحديث واجهة المحرر عند تغيير اللغة
+        languageSelect.addEventListener('change', function() {
+            const selectedLanguage = this.value;
+            languageBadge.textContent = this.options[this.selectedIndex].text;
+            codeEditor.value = codeExamples[selectedLanguage] || '';
             
-            // تحديث المحرر عند الكتابة
-            codeEditor.addEventListener('input', () => {
-                updateLineNumbers();
-                updateStats();
-                checkForErrors();
-                saveToLocalStorage();
-            });
-            
-            // تشغيل الكود
-            runBtn.addEventListener('click', runCode);
-            
-            // مسح النتيجة
-            clearBtn.addEventListener('click', () => {
-                output.innerHTML = '';
-            });
-            
-            // تغيير اللغة
-            languageSelect.addEventListener('change', () => {
-                files[currentFile].language = languageSelect.value;
-                checkForErrors();
-            });
-            
-            // تبديل السمة
-            themeToggle.addEventListener('click', toggleTheme);
-            
-            // أحداث الملفات
-            fileItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const file = item.dataset.file;
-                    if (file !== currentFile) {
-                        switchFile(file);
-                    }
-                });
-            });
-            
-            // أحداث الألسنة
-            editorTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.dataset.tab;
-                    switchFile(getFileNameByTab(tabName));
-                });
-            });
-            
-            // تحميل البيانات المحفوظة
-            loadFromLocalStorage();
-            
-            // تشغيل أولي للكود
-            setTimeout(() => {
-                checkForErrors();
-            }, 500);
-        }
-
-        // تحميل ملف
-        function loadFile(fileName) {
-            currentFile = fileName;
-            const file = files[fileName];
-            
-            codeEditor.value = file.content;
-            languageSelect.value = file.language;
-            
-            // تحديث الواجهة
-            fileItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.file === fileName) {
-                    item.classList.add('active');
-                }
-            });
-            
-            editorTabs.forEach(tab => {
-                tab.classList.remove('active');
-                if (getFileNameByTab(tab.dataset.tab) === fileName) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            updateLineNumbers();
-            updateStats();
-        }
-
-        // الحصول على اسم الملف حسب اللسان
-        function getFileNameByTab(tabName) {
-            switch(tabName) {
-                case 'html': return 'index.html';
-                case 'css': return 'style.css';
-                case 'js': return 'script.js';
-                default: return 'index.html';
+            // تحديث اسم الملف بناءً على اللغة المختارة
+            const currentFilename = filenameInput.value;
+            const baseName = currentFilename.split('.')[0];
+            filenameInput.value = baseName + fileExtensions[selectedLanguage];
+        });
+        
+        // تحديث اسم الملف يدوياً
+        filenameInput.addEventListener('input', function() {
+            savedFileName.textContent = `لم يتم حفظ الملف بعد: ${this.value}`;
+        });
+        
+        // مسح المحرر
+        clearBtn.addEventListener('click', function() {
+            if (confirm("هل أنت متأكد من مسح المحرر؟ سيتم حذف جميع الأكواد الحالية.")) {
+                codeEditor.value = '';
+                savedFileName.textContent = 'لم يتم حفظ أي ملف بعد';
             }
-        }
-
-        // تبديل الملف
-        function switchFile(fileName) {
-            files[currentFile].content = codeEditor.value;
-            loadFile(fileName);
-            checkForErrors();
-        }
-
-        // تحديث أرقام الأسطر
-        function updateLineNumbers() {
-            const lines = codeEditor.value.split('\n').length;
-            lineNumbers.innerHTML = '';
-            
-            for (let i = 1; i <= lines; i++) {
-                lineNumbers.innerHTML += i + '<br>';
-            }
-            
-            // إزالة تلوين الأخطاء القديم
-            const linesWithErrors = lineNumbers.querySelectorAll('.error-line');
-            linesWithErrors.forEach(line => {
-                line.classList.remove('error-line');
-            });
-            
-            // تلوين الأسطر التي بها أخطاء
-            errors.forEach(error => {
-                if (error.line <= lines) {
-                    const lineElement = lineNumbers.children[error.line - 1];
-                    if (lineElement) {
-                        lineElement.classList.add('error-line');
-                    }
-                }
-            });
-        }
-
-        // تحديث الإحصائيات
-        function updateStats() {
-            const content = codeEditor.value;
-            const lines = content.split('\n').length;
-            const chars = content.length;
-            
-            linesCount.textContent = lines;
-            charsCount.textContent = chars;
-            errorsCount.textContent = errors.length;
-            warningsCount.textContent = warnings.length;
-        }
-
-        // التحقق من الأخطاء
-        function checkForErrors() {
-            const content = codeEditor.value;
+        });
+        
+        // حفظ الملف
+        saveBtn.addEventListener('click', function() {
+            const filename = filenameInput.value.trim();
+            const codeContent = codeEditor.value.trim();
             const language = languageSelect.value;
             
-            errors = [];
-            warnings = [];
+            if (!filename) {
+                alert('الرجاء إدخال اسم الملف أولاً');
+                filenameInput.focus();
+                return;
+            }
             
-            // قواعد كشف الأخطاء
-            const errorRules = {
-                html: [
-                    { pattern: /<[^>]*$/gm, message: "وسم غير مكتمل", type: "error" },
-                    { pattern: /<(\w+)[^>]*>(?![\s\S]*<\/\1>)[\s\S]*$/gm, message: "وسم مغلق مفقود", type: "error" },
-                    { pattern: /<\/\w+>\s*<\//gm, message: "إغلاق وسم زائد", type: "error" },
-                    { pattern: /<script>/gi, message: "يفضل وضع script قبل </body>", type: "warning" }
-                ],
-                css: [
-                    { pattern: /{[^}]*$/gm, message: "قوس مغلق مفقود }", type: "error" },
-                    { pattern: /[^{]*}/gm, message: "قوس مفتوح مفقود {", type: "error" },
-                    { pattern: /:[^;]*$/gm, message: "فاصلة منقوطة مفقودة ;", type: "error" },
-                    { pattern: /!important/gi, message: "تجنب استخدام !important", type: "warning" }
-                ],
-                js: [
-                    { pattern: /(\{|\[|\(|[^'"`]\s*\([^)]*)$/gm, message: "قوس مغلق مفقود ) ] }", type: "error" },
-                    { pattern: /(['"`])[^\1]*$/gm, message: "نهاية نص مفقودة", type: "error" },
-                    { pattern: /console\.log/gi, message: "تذكر حذف console.log في الإنتاج", type: "warning" }
-                ]
+            if (!codeContent) {
+                alert('الرجاء كتابة بعض الأكواد أولاً');
+                codeEditor.focus();
+                return;
+            }
+            
+            // إضافة الامتداد إذا لم يكن موجوداً
+            let finalFilename = filename;
+            const extension = fileExtensions[language];
+            if (!finalFilename.endsWith(extension)) {
+                finalFilename += extension;
+                filenameInput.value = finalFilename;
+            }
+            
+            // تحديد نوع MIME بناءً على اللغة
+            const mimeTypes = {
+                html: 'text/html',
+                css: 'text/css',
+                javascript: 'application/javascript',
+                python: 'text/x-python',
+                php: 'application/x-httpd-php',
+                java: 'text/x-java-source',
+                cpp: 'text/x-c++src'
             };
             
-            const rules = errorRules[language] || [];
+            const mimeType = mimeTypes[language] || 'text/plain';
             
-            // البحث عن الأخطاء والتحذيرات
-            rules.forEach(rule => {
-                const lines = content.split('\n');
-                lines.forEach((line, index) => {
-                    if (rule.pattern.test(line)) {
-                        if (rule.type === 'error') {
-                            errors.push({
-                                line: index + 1,
-                                message: rule.message,
-                                type: 'error'
-                            });
-                        } else {
-                            warnings.push({
-                                line: index + 1,
-                                message: rule.message,
-                                type: 'warning'
-                            });
-                        }
-                    }
-                });
-            });
+            // إنشاء Blob وتحويله لرابط قابل للتحميل
+            const blob = new Blob([codeContent], { type: mimeType });
+            const url = URL.createObjectURL(blob);
             
-            // تحديث الواجهة
-            updateLineNumbers();
-            updateStats();
-            showErrorPanel();
-        }
-
-        // عرض لوحة الأخطاء
-        function showErrorPanel() {
-            // إزالة اللوحات القديمة
-            const oldPanels = document.querySelectorAll('.error-panel, .success-panel');
-            oldPanels.forEach(panel => panel.remove());
+            // إنشاء عنصر <a> للتحميل
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = finalFilename;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
             
-            // عرض الأخطاء
-            if (errors.length > 0) {
-                const errorPanel = document.createElement('div');
-                errorPanel.className = 'error-panel';
-                errorPanel.innerHTML = `
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>تم العثور على ${errors.length} خطأ</span>
-                `;
-                output.prepend(errorPanel);
-                
-                // عرض تفاصيل الأخطاء
-                errors.forEach(error => {
-                    const errorDetail = document.createElement('div');
-                    errorDetail.className = 'error-panel';
-                    errorDetail.style.margin = '5px 20px';
-                    errorDetail.style.padding = '8px 12px';
-                    errorDetail.innerHTML = `
-                        <i class="fas fa-times-circle"></i>
-                        <span>سطر ${error.line}: ${error.message}</span>
-                    `;
-                    output.prepend(errorDetail);
-                });
-            } else {
-                const successPanel = document.createElement('div');
-                successPanel.className = 'success-panel';
-                successPanel.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    <span>لا توجد أخطاء في الكود</span>
-                `;
-                output.prepend(successPanel);
-            }
-        }
-
-        // تشغيل الكود
-        function runCode() {
-            const content = codeEditor.value;
-            const language = languageSelect.value;
+            // تحرير الموارد
+            URL.revokeObjectURL(url);
             
-            output.innerHTML = '';
+            // تحديث واجهة المستخدم
+            savedFileName.textContent = `تم حفظ: ${finalFilename}`;
             
-            if (language === 'html') {
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '400px';
-                iframe.style.border = 'none';
-                iframe.style.borderRadius = '8px';
-                iframe.style.marginTop = '10px';
-                output.appendChild(iframe);
-                
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(content);
-                iframeDoc.close();
-            } else if (language === 'css') {
-                const preview = document.createElement('div');
-                preview.innerHTML = `
-                    <h3 style="color: var(--secondary); margin-bottom: 15px;">معاينة CSS</h3>
-                    <div id="cssPreview" style="background: white; color: black; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #333; margin-bottom: 10px;">عنوان تجريبي</h4>
-                        <p style="color: #666; margin-bottom: 15px;">هذا نص تجريبي لتطبيق أنماط CSS عليه</p>
-                        <button style="padding: 10px 20px; background: #007acc; color: white; border: none; border-radius: 5px; cursor: pointer;">زر تجريبي</button>
-                    </div>
-                `;
-                output.appendChild(preview);
-                
-                const style = document.createElement('style');
-                style.textContent = content;
-                document.head.appendChild(style);
-                
-                setTimeout(() => {
-                    document.head.removeChild(style);
-                }, 1000);
-            } else if (language === 'js') {
-                try {
-                    const result = eval(content);
-                    const resultDiv = document.createElement('div');
-                    resultDiv.style.padding = '15px';
-                    resultDiv.style.background = 'var(--success-bg)';
-                    resultDiv.style.borderRight = '3px solid var(--success-border)';
-                    resultDiv.style.borderRadius = '6px';
-                    resultDiv.style.marginTop = '10px';
-                    resultDiv.innerHTML = `
-                        <h4 style="color: var(--success-border); margin-bottom: 10px;">نتيجة التنفيذ</h4>
-                        <pre style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; overflow: auto;">${JSON.stringify(result, null, 2) || 'تم التنفيذ بنجاح'}</pre>
-                    `;
-                    output.appendChild(resultDiv);
-                } catch (error) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.style.padding = '15px';
-                    errorDiv.style.background = 'var(--error-bg)';
-                    errorDiv.style.borderRight = '3px solid var(--error-border)';
-                    errorDiv.style.borderRadius = '6px';
-                    errorDiv.style.marginTop = '10px';
-                    errorDiv.innerHTML = `
-                        <h4 style="color: var(--error-border); margin-bottom: 10px;">خطأ في التنفيذ</h4>
-                        <pre style="color: var(--error-border); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; overflow: auto;">${error.message}</pre>
-                    `;
-                    output.appendChild(errorDiv);
-                }
-            }
+            // إظهار رسالة نجاح
+            alert(`تم حفظ الملف "${finalFilename}" بنجاح!\nسيبدأ التحميل الآن.`);
+        });
+        
+        // تهيئة المحرر عند التحميل
+        window.addEventListener('DOMContentLoaded', function() {
+            // تعيين المحتوى الافتراضي
+            codeEditor.value = codeExamples.html;
+            savedFileName.textContent = 'لم يتم حفظ أي ملف بعد';
             
-            checkForErrors();
-        }
-
-        // تبديل السمة
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            const icon = themeToggle.querySelector('i');
-            
-            if (document.body.classList.contains('light-theme')) {
-                icon.className = 'fas fa-sun';
-            } else {
-                icon.className = 'fas fa-moon';
-            }
-        }
-
-        // حفظ في التخزين المحلي
-        function saveToLocalStorage() {
-            files[currentFile].content = codeEditor.value;
-            localStorage.setItem('codeEditorFiles', JSON.stringify(files));
-            localStorage.setItem('codeEditorCurrentFile', currentFile);
-        }
-
-        // تحميل من التخزين المحلي
-        function loadFromLocalStorage() {
-            const savedFiles = localStorage.getItem('codeEditorFiles');
-            const savedCurrentFile = localStorage.getItem('codeEditorCurrentFile');
-            
-            if (savedFiles) {
-                const parsedFiles = JSON.parse(savedFiles);
-                Object.keys(parsedFiles).forEach(key => {
-                    if (files[key]) {
-                        files[key].content = parsedFiles[key].content;
-                    }
-                });
-                
-                if (savedCurrentFile && files[savedCurrentFile]) {
-                    loadFile(savedCurrentFile);
-                }
-            }
-        }
-
-        // بدء التطبيق
-        document.addEventListener('DOMContentLoaded', initEditor);
+            // ضبط حجم المحرر تلقائياً
+            codeEditor.style.height = 'auto';
+            codeEditor.style.height = (codeEditor.scrollHeight) + 'px';
+        });
+        
+        // ضبط حجم المحرر تلقائياً أثناء الكتابة
+        codeEditor.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
     </script>
 </body>
 </html>
