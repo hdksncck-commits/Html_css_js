@@ -1,78 +1,78 @@
 <!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>القرآن الكريم</title>
-  <style>
-    body { margin:0; font-family: system-ui, Arial; background:#0f172a; color:#fff; }
-    header { background:#020617; padding:12px; text-align:center; font-weight:bold; }
-    nav { display:flex; overflow-x:auto; background:#020617; }
-    nav button { flex:1; min-width:120px; background:none; border:none; color:#cbd5f5; padding:10px; }
-    nav button.active { background:#1e293b; color:#fff; }
-    main { padding:12px; }
-    select, button { width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:none; }
-    .card { background:#020617; padding:12px; border-radius:12px; margin-bottom:10px; }
-    audio { width:100%; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>القرآن الكريم | تطبيق متكامل</title>
+<style>
+:root{
+ --bg:#0f172a;--card:#020617;--primary:#22c55e;--text:#fff;--muted:#94a3b8;
+}
+[data-theme="light"]{
+ --bg:#f8fafc;--card:#fff;--primary:#16a34a;--text:#020617;--muted:#475569;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
+header{padding:14px;text-align:center;font-weight:bold;background:var(--card)}
+nav{display:flex;position:fixed;bottom:0;width:100%;background:var(--card)}
+nav button{flex:1;border:none;background:none;color:var(--muted);padding:10px;font-size:12px}
+nav button.active{color:var(--primary)}
+main{padding:12px;padding-bottom:70px}
+.card{background:var(--card);padding:12px;border-radius:16px;margin-bottom:12px}
+select,input,button{width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:none}
+button.primary{background:var(--primary);color:#fff;font-weight:bold}
+audio{width:100%}
+.list{max-height:300px;overflow:auto}
+.item{padding:8px;border-bottom:1px solid #1e293b}
+.small{font-size:12px;color:var(--muted)}
+</style>
 </head>
-<body>
-<header>📖 القرآن الكريم</header><nav>
-  <button class="active" onclick="showTab('quran')">القرآن</button>
-  <button onclick="showTab('radio')">الإذاعة</button>
-  <button onclick="showTab('video')">فيديو</button>
-</nav><main>
-  <section id="quran">
-    <select id="reciters"></select>
-    <select id="suwar"></select>
-    <button onclick="playSurah()">تشغيل السورة</button>
-    <div class="card">
-      <audio id="player" controls></audio>
-    </div>
-  </section>  <section id="radio" style="display:none"></section>
-  <section id="video" style="display:none"></section>
-</main><script>
-const API = 'https://mp3quran.net/api/v3';
-
-function showTab(id){
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('main section').forEach(s=>s.style.display='none');
-  document.getElementById(id).style.display='block';
-}
-
-async function loadReciters(){
-  const r = await fetch(API+'/reciters?language=ar');
-  const j = await r.json();
-  const sel = document.getElementById('reciters');
-  j.reciters.forEach(rc=>{
-    const o=document.createElement('option');
-    o.value=rc.id; o.textContent=rc.name;
-    sel.appendChild(o);
-  });
-}
-
-async function loadSuwar(){
-  const r = await fetch(API+'/suwar');
-  const j = await r.json();
-  const sel = document.getElementById('suwar');
-  j.suwar.forEach(s=>{
-    const o=document.createElement('option');
-    o.value=s.id; o.textContent=s.name;
-    sel.appendChild(o);
-  });
-}
-
-async function playSurah(){
-  const reciter = reciters.value;
-  const surah = suwar.value;
-  const r = await fetch(API+`/reciters?id=${reciter}`);
-  const j = await r.json();
-  const server = j.reciters[0].moshaf[0].server;
-  player.src = server + surah.padStart(3,'0') + '.mp3';
-  player.play();
-}
-
-loadReciters();
-loadSuwar();
-</script></body>
+<body data-theme="dark">
+<header>📖 القرآن الكريم</header>
+<main>
+<section id="home">
+ <div class="card">
+  <input id="search" placeholder="🔍 ابحث عن سورة" oninput="filterSuwar()">
+  <select id="reciters"></select>
+  <select id="suwar"></select>
+  <button class="primary" onclick="playSurah()">▶ تشغيل السورة</button>
+ </div>
+ <div class="card"><audio id="player" controls></audio></div>
+</section><section id="radio" style="display:none"></section>
+<section id="tafsir" style="display:none"></section>
+<section id="videos" style="display:none"></section>
+<section id="settings" style="display:none">
+ <div class="card">
+  <h3>🎨 الثيم</h3>
+  <button onclick="setTheme('dark')">داكن</button>
+  <button onclick="setTheme('light')">فاتح</button>
+ </div>
+ <div class="card">
+  <h3>ℹ️ عن التطبيق</h3>
+  <p class="small">تطبيق قرآن كريم متكامل (صوت – إذاعات – تفسير – فيديو) باستخدام MP3Quran API</p>
+ </div>
+</section>
+</main>
+<nav>
+ <button class="active" onclick="tab('home',this)">🏠</button>
+ <button onclick="tab('radio',this);loadRadios()">📻</button>
+ <button onclick="tab('tafsir',this);loadTafsir()">📘</button>
+ <button onclick="tab('videos',this);loadVideos()">🎬</button>
+ <button onclick="tab('settings',this)">⚙️</button>
+</nav>
+<script>
+const API='https://mp3quran.net/api/v3';let allSuwar=[];
+function tab(id,el){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';}
+async function loadReciters(){const r=await fetch(API+'/reciters?language=ar');const j=await r.json();j.reciters.forEach(x=>reciters.innerHTML+=`<option value="${x.id}">${x.name}</option>`)}
+async function loadSuwar(){const r=await fetch(API+'/suwar');const j=await r.json();allSuwar=j.suwar;renderSuwar(allSuwar)}
+function renderSuwar(l){suwar.innerHTML='';l.forEach(s=>suwar.innerHTML+=`<option value="${s.id}">${s.name}</option>`)}
+function filterSuwar(){renderSuwar(allSuwar.filter(s=>s.name.includes(search.value)))}
+async function playSurah(){const r=await fetch(API+`/reciters?id=${reciters.value}`);const j=await r.json();const server=j.reciters[0].moshaf[0].server;player.src=server+suwar.value.padStart(3,'0')+'.mp3';player.play();}
+async function loadRadios(){radio.innerHTML='<div class="card">تحميل...</div>';const r=await fetch(API+'/radios');const j=await r.json();radio.innerHTML='<div class="card list">'+j.radios.map(x=>`<div class="item" onclick="player.src='${x.url}';player.play()">📻 ${x.name}</div>`).join('')+'</div>'}
+async function loadTafsir(){tafsir.innerHTML='<div class="card">اختر سورة من الرئيسية لعرض التفسير</div>'}
+async function loadVideos(){videos.innerHTML='<div class="card">تحميل...</div>';const r=await fetch(API+'/videos');const j=await r.json();videos.innerHTML='<div class="card list">'+j.videos.slice(0,20).map(v=>`<div class="item">🎬 ${v.title}</div>`).join('')+'</div>'}
+function setTheme(t){document.body.setAttribute('data-theme',t);localStorage.theme=t}
+if(localStorage.theme)setTheme(localStorage.theme);
+loadReciters();loadSuwar();
+</script>
+</body>
 </html>
