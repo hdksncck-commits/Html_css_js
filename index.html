@@ -2,21 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>القرآن الكريم - تطبيق كامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* التصميم العام */
         :root {
-            --primary: #2c786c;
-            --secondary: #004445;
-            --accent: #f8b500;
-            --light: #faf5e4;
-            --text: #333;
-            --light-text: #666;
-            --card-bg: #fff;
-            --shadow: 0 2px 10px rgba(0,0,0,0.08);
-            --radius: 12px;
+            --primary-color: #2ca4ab;
+            --primary-dark: #1d7a80;
+            --secondary-color: #165a5e;
+            --light-color: #f8f9fa;
+            --dark-color: #333;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -26,34 +27,54 @@
         }
 
         body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
-            background: var(--light);
-            color: var(--text);
+            font-family: 'Amiri', 'Scheherazade New', serif;
+            background-color: #f5f5f5;
+            color: var(--dark-color);
             line-height: 1.6;
-        }
-
-        .container {
+            direction: rtl;
+            overflow-x: hidden;
+            height: 100vh;
+            max-height: 100vh;
+            position: fixed;
             width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 15px;
         }
 
-        /* الهيدر */
-        header {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        /* التصميم الرئيسي */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* شريط العنوان */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 18px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .header-content {
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            position: relative;
         }
 
         .logo {
@@ -62,136 +83,151 @@
             gap: 12px;
         }
 
-        .logo-icon {
-            background: var(--accent);
+        .logo i {
+            font-size: 28px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
             width: 40px;
             height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .logo-text h1 {
-            font-size: 1.3rem;
-            font-weight: 700;
+        .header-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .logo-text p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-
-        /* التنقل */
-        .nav-tabs {
+        /* شريط التبويب */
+        .tab-bar {
             display: flex;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50px;
-            padding: 5px;
-            margin-top: 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
             overflow-x: auto;
+            white-space: nowrap;
             scrollbar-width: none;
         }
 
-        .nav-tabs::-webkit-scrollbar {
+        .tab-bar::-webkit-scrollbar {
             display: none;
         }
 
-        .nav-tab {
-            flex: 1;
-            min-width: 85px;
-            text-align: center;
-            padding: 10px 5px;
-            border-radius: 50px;
+        .tab {
+            padding: 15px 20px;
+            font-size: 16px;
             font-weight: 600;
-            font-size: 0.9rem;
+            color: var(--gray-color);
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            min-width: 100px;
+            text-align: center;
+            flex-shrink: 0;
         }
 
-        .nav-tab.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
 
-        .nav-tab i {
-            margin-left: 5px;
-            font-size: 0.9rem;
+        /* منطقة المحتوى */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
 
-        /* المحتوى الرئيسي */
-        main {
-            padding: 20px 0 100px;
-        }
-
-        .section {
+        .content-section {
             display: none;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.5s ease;
         }
 
-        .section.active {
+        .content-section.active {
             display: block;
         }
 
-        .section-header {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* تصميم البطاقات */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 700;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(44, 120, 108, 0.2);
         }
 
-        .section-title {
-            font-size: 1.4rem;
-            color: var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* البطاقات والقوائم */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
+        .card-body {
             padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0,0,0,0.05);
         }
 
+        /* تصميم القوائم */
         .list-item {
             display: flex;
             align-items: center;
-            padding: 16px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            margin-bottom: 12px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.05);
+            padding: 15px;
+            border-bottom: 1px solid #eee;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
         }
 
         .list-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: #f8f9fa;
         }
 
         .list-item-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background-color: #e9f7f9;
+            color: var(--primary-color);
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
             margin-left: 15px;
             flex-shrink: 0;
         }
@@ -202,1061 +238,1229 @@
 
         .list-item-title {
             font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--secondary);
+            font-size: 17px;
+            color: var(--dark-color);
             margin-bottom: 5px;
         }
 
         .list-item-subtitle {
-            font-size: 0.9rem;
-            color: var(--light-text);
-            line-height: 1.4;
+            font-size: 14px;
+            color: var(--gray-color);
         }
 
-        /* المشغل */
-        .player-card {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        /* مشغل الصوت */
+        .audio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
             color: white;
-            border-radius: var(--radius);
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 200;
+            display: none;
         }
 
-        .player-header {
+        .player-controls {
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-        .player-avatar {
-            width: 70px;
-            height: 70px;
-            background: rgba(255,255,255,0.2);
+        .player-info {
+            flex: 1;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .player-info .surah-name {
+            font-weight: 700;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-info .reciter-name {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .player-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-left: 20px;
-            flex-shrink: 0;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .player-info h3 {
-            font-size: 1.3rem;
-            margin-bottom: 8px;
-            font-weight: 700;
+        .player-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .player-info p {
-            opacity: 0.9;
-            font-size: 0.95rem;
-        }
-
-        /* شريط التحكم */
-        .progress-container {
-            width: 100%;
-            margin: 20px 0;
+        .player-btn.play-btn {
+            background: rgba(255, 255, 255, 0.3);
+            width: 50px;
+            height: 50px;
         }
 
         .progress-bar {
             width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 3px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
             overflow: hidden;
-            cursor: pointer;
         }
 
         .progress {
             height: 100%;
-            background: var(--accent);
-            width: 35%;
-            border-radius: 3px;
+            background: white;
+            width: 30%;
+            border-radius: 5px;
             transition: width 0.3s ease;
         }
 
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            opacity: 0.9;
-        }
-
-        /* أزرار التحكم */
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .control-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .control-btn:hover {
-            background: rgba(255,255,255,0.25);
-            transform: scale(1.05);
-        }
-
-        .play-btn {
-            width: 65px;
-            height: 65px;
-            background: var(--accent);
-            border: none;
-            font-size: 1.5rem;
-        }
-
-        .play-btn:hover {
-            background: #ffc107;
-            transform: scale(1.08);
-        }
-
-        /* مشغل الفوتر */
-        .mini-player {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 1000;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .mini-player.active {
-            transform: translateY(0);
-        }
-
-        .mini-player-info {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-
-        .mini-player-avatar {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            margin-left: 12px;
-            flex-shrink: 0;
-        }
-
-        .mini-player-text h4 {
-            font-size: 1rem;
-            color: var(--secondary);
-            margin-bottom: 3px;
-        }
-
-        .mini-player-text p {
-            font-size: 0.8rem;
-            color: var(--light-text);
-        }
-
-        .mini-player-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .mini-play-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .mini-play-btn:hover {
-            background: var(--secondary);
-            transform: scale(1.05);
-        }
-
-        /* الحالات */
+        /* التحميل */
         .loading {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 40px 20px;
-            color: var(--light-text);
-        }
-
-        .loading i {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        .error {
             text-align: center;
-            padding: 40px 20px;
-            color: #e74c3c;
         }
 
-        .error i {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
-
-        /* البحث */
-        .search-box {
-            position: relative;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
 
-        .search-input {
-            width: 100%;
-            padding: 15px 45px 15px 20px;
-            border: 2px solid rgba(44, 120, 108, 0.2);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            background: white;
-            transition: all 0.3s ease;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44, 120, 108, 0.1);
+        /* الشريط الجانبي */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background-color: white;
+            z-index: 300;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            overflow-y: auto;
+            padding: 20px;
         }
 
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--light-text);
-            font-size: 1.2rem;
+        .sidebar.active {
+            right: 0;
         }
 
-        /* الأنيميشن */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .sidebar-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        .close-sidebar {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-color);
+            cursor: pointer;
         }
 
-        /* التفعيل */
-        .active {
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 250;
+            display: none;
+        }
+
+        .overlay.active {
             display: block;
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 12px;
-            }
-            
-            .logo-text h1 {
-                font-size: 1.2rem;
-            }
-            
-            .logo-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 1.2rem;
-            }
-            
-            .nav-tab {
-                min-width: 75px;
-                font-size: 0.85rem;
-                padding: 8px 5px;
-            }
-            
-            .list-item {
-                padding: 14px;
-            }
-            
-            .list-item-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
-            
-            .player-card {
-                padding: 20px;
-            }
-            
-            .player-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.7rem;
-            }
-            
-            .control-btn {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .play-btn {
-                width: 60px;
-                height: 60px;
-            }
+        /* تصميم للآيات */
+        .ayah-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+            border-right: 5px solid var(--primary-color);
         }
 
-        /* ألوان إضافية للرواية */
-        .riwaya-tag {
+        .ayah-text {
+            font-size: 24px;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 15px;
+            color: #1a472a;
+        }
+
+        .ayah-translation {
+            font-size: 16px;
+            color: var(--dark-color);
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .ayah-number {
             display: inline-block;
-            background: rgba(44, 120, 108, 0.1);
-            color: var(--primary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        .surah-number {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: var(--accent);
+            background-color: var(--primary-color);
             color: white;
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
+            text-align: center;
+            line-height: 30px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        /* تصميم التجاوب */
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 18px;
+            }
+            
+            .tab {
+                min-width: 85px;
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+            
+            .card-header {
+                font-size: 16px;
+                padding: 12px 15px;
+            }
+            
+            .ayah-text {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .logo h1 {
+                font-size: 16px;
+            }
+            
+            .tab {
+                min-width: 75px;
+                padding: 12px 8px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- الهيدر -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-quran"></i>
-                    </div>
-                    <div class="logo-text">
-                        <h1>القرآن الكريم</h1>
-                        <p>تطبيق كامل للاستماع والتلاوة</p>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <i class="fas fa-search" id="searchToggle" style="font-size: 1.2rem; cursor: pointer;"></i>
-                </div>
+    <div class="app-container">
+        <!-- شريط العنوان -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-quran"></i>
+                <h1>القرآن الكريم</h1>
             </div>
-
-            <!-- شريط التنقل -->
-            <div class="nav-tabs">
-                <div class="nav-tab active" data-tab="reciters">
-                    <i class="fas fa-users"></i> القراء
-                </div>
-                <div class="nav-tab" data-tab="suwar">
-                    <i class="fas fa-book-open"></i> السور
-                </div>
-                <div class="nav-tab" data-tab="player">
-                    <i class="fas fa-play-circle"></i> المشغل
-                </div>
-                <div class="nav-tab" data-tab="tafsir">
-                    <i class="fas fa-book"></i> التفسير
-                </div>
-                <div class="nav-tab" data-tab="settings">
-                    <i class="fas fa-cog"></i> الإعدادات
-                </div>
+            <div class="header-controls">
+                <button id="searchBtn" title="بحث">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button id="menuBtn" title="القائمة">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- مربع البحث -->
-    <div class="container">
-        <div class="search-box" id="searchBox" style="display: none;">
-            <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن قارئ أو سورة...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-    </div>
+        <!-- شريط التبويب -->
+        <nav class="tab-bar">
+            <div class="tab active" data-tab="surahs">السور</div>
+            <div class="tab" data-tab="reciters">القراء</div>
+            <div class="tab" data-tab="radio">الراديو</div>
+            <div class="tab" data-tab="tv">القنوات</div>
+            <div class="tab" data-tab="tafasir">التفاسير</div>
+            <div class="tab" data-tab="recent">المؤخرات</div>
+        </nav>
 
-    <!-- المحتوى الرئيسي -->
-    <main>
-        <div class="container">
-            <!-- قسم القراء -->
-            <section class="section active" id="reciters-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-users"></i>
-                        القراء
-                    </h2>
-                    <span class="riwaya-tag" id="riwayaFilter">حفص</span>
-                </div>
-                
-                <div id="reciters-list">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>جاري تحميل قائمة القراء...</p>
-                    </div>
-                </div>
-            </section>
-
+        <!-- منطقة المحتوى الرئيسي -->
+        <main class="content-area">
             <!-- قسم السور -->
-            <section class="section" id="suwar-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-book-open"></i>
-                        سور القرآن الكريم
-                    </h2>
-                    <span id="surah-count">114 سورة</span>
+            <section id="surahs" class="content-section active">
+                <div class="loading" id="surahsLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة السور...</p>
                 </div>
-                
-                <div id="suwar-list">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>جاري تحميل قائمة السور...</p>
+                <div class="card" id="surahsList" style="display: none;">
+                    <div class="card-header">
+                        <span>سور القرآن الكريم</span>
+                        <select id="languageSelect">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="ur">اردو</option>
+                        </select>
+                    </div>
+                    <div class="card-body" id="surahsContainer">
+                        <!-- سيتم ملئها بالبيانات -->
                     </div>
                 </div>
             </section>
 
-            <!-- قسم المشغل -->
-            <section class="section" id="player-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-play-circle"></i>
-                        مشغل القرآن
-                    </h2>
+            <!-- قسم القراء -->
+            <section id="reciters" class="content-section">
+                <div class="loading" id="recitersLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة القراء...</p>
                 </div>
-                
-                <div class="player-card">
-                    <div class="player-header">
-                        <div class="player-avatar">
-                            <i class="fas fa-quran"></i>
-                        </div>
-                        <div class="player-info">
-                            <h3 id="current-reciter">اختر قارئاً</h3>
-                            <p id="current-surah">اختر سورة للاستماع</p>
-                        </div>
+                <div class="card" id="recitersList" style="display: none;">
+                    <div class="card-header">
+                        <span>قراء القرآن الكريم</span>
+                        <select id="riwayatSelect">
+                            <option value="all">جميع الروايات</option>
+                        </select>
                     </div>
-                    
-                    <div class="progress-container">
-                        <div class="progress-bar" id="progressBar">
-                            <div class="progress" id="audioProgress"></div>
-                        </div>
-                        <div class="time-info">
-                            <span id="currentTime">00:00</span>
-                            <span id="duration">00:00</span>
-                        </div>
-                    </div>
-                    
-                    <div class="controls">
-                        <div class="control-btn" id="prevBtn">
-                            <i class="fas fa-step-backward"></i>
-                        </div>
-                        <div class="control-btn play-btn pulse" id="playBtn">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="control-btn" id="nextBtn">
-                            <i class="fas fa-step-forward"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <h3 style="color: var(--secondary); margin-bottom: 15px;">
-                        <i class="fas fa-info-circle"></i> معلومات التلاوة
-                    </h3>
-                    <p>اختر القارئ من قسم "القراء" ثم اختر السورة من قسم "السور" للبدء في الاستماع.</p>
-                    <p style="margin-top: 10px; color: var(--primary); font-weight: 600;">
-                        يمكنك تغيير الرواية من زر التصفية أعلى قسم القراء.
-                    </p>
-                </div>
-            </section>
-
-            <!-- قسم التفسير -->
-            <section class="section" id="tafsir-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-book"></i>
-                        كتب التفسير
-                    </h2>
-                </div>
-                
-                <div id="tafsir-list">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>جاري تحميل قائمة التفاسير...</p>
+                    <div class="card-body" id="recitersContainer">
+                        <!-- سيتم ملئها بالبيانات -->
                     </div>
                 </div>
             </section>
 
-            <!-- قسم الإعدادات -->
-            <section class="section" id="settings-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-cog"></i>
-                        الإعدادات
-                    </h2>
+            <!-- قسم الراديو -->
+            <section id="radio" class="content-section">
+                <div class="loading" id="radioLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة الإذاعات...</p>
                 </div>
-                
-                <div class="card">
-                    <h3 style="color: var(--secondary); margin-bottom: 20px;">
-                        <i class="fas fa-sliders-h"></i> إعدادات التطبيق
-                    </h3>
-                    
-                    <div class="list-item" style="cursor: default;">
-                        <div class="list-item-icon">
-                            <i class="fas fa-volume-up"></i>
-                        </div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">مستوى الصوت</div>
-                            <div class="list-item-subtitle">
-                                <input type="range" id="volumeSlider" min="0" max="100" value="80" style="width: 100%; margin-top: 8px;">
-                            </div>
-                        </div>
+                <div class="card" id="radioList" style="display: none;">
+                    <div class="card-header">
+                        <span>إذاعات القرآن الكريم</span>
                     </div>
-                    
-                    <div class="list-item" style="cursor: default;">
-                        <div class="list-item-icon">
-                            <i class="fas fa-palette"></i>
-                        </div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">السمة</div>
-                            <div class="list-item-subtitle">
-                                <select id="themeSelect" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin-top: 8px;">
-                                    <option value="default">السمة الأساسية</option>
-                                    <option value="dark">الوضع الداكن</option>
-                                    <option value="light">الوضع الفاتح</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="list-item" style="cursor: pointer;" id="downloadBtn">
-                        <div class="list-item-icon">
-                            <i class="fas fa-download"></i>
-                        </div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">التلاوات المحفوظة</div>
-                            <div class="list-item-subtitle">عرض وإدارة التلاوات المحفوظة</div>
-                        </div>
-                    </div>
-                    
-                    <div class="list-item" style="cursor: pointer;" id="aboutBtn">
-                        <div class="list-item-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">حول التطبيق</div>
-                            <div class="list-item-subtitle">معلومات عن تطبيق القرآن الكريم</div>
-                        </div>
+                    <div class="card-body" id="radioContainer">
+                        <!-- سيتم ملئها بالبيانات -->
                     </div>
                 </div>
             </section>
-        </div>
-    </main>
 
-    <!-- المشغل المصغر -->
-    <div class="mini-player" id="miniPlayer">
-        <div class="mini-player-info">
-            <div class="mini-player-avatar">
-                <i class="fas fa-play"></i>
+            <!-- قسم القنوات -->
+            <section id="tv" class="content-section">
+                <div class="loading" id="tvLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة القنوات...</p>
+                </div>
+                <div class="card" id="tvList" style="display: none;">
+                    <div class="card-header">
+                        <span>قنوات القرآن الكريم</span>
+                        <select id="videoTypeSelect">
+                            <option value="all">جميع الأنواع</option>
+                        </select>
+                    </div>
+                    <div class="card-body" id="tvContainer">
+                        <!-- سيتم ملئها بالبيانات -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم التفاسير -->
+            <section id="tafasir" class="content-section">
+                <div class="loading" id="tafasirLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة التفاسير...</p>
+                </div>
+                <div class="card" id="tafasirList" style="display: none;">
+                    <div class="card-header">
+                        <span>تفاسير القرآن الكريم</span>
+                    </div>
+                    <div class="card-body" id="tafasirContainer">
+                        <!-- سيتم ملئها بالبيانات -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم المؤخرات -->
+            <section id="recent" class="content-section">
+                <div class="loading" id="recentLoading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل السور المستمع لها مؤخراً...</p>
+                </div>
+                <div class="card" id="recentList" style="display: none;">
+                    <div class="card-header">
+                        <span>السور المستمع لها مؤخراً</span>
+                    </div>
+                    <div class="card-body" id="recentContainer">
+                        <!-- سيتم ملئها بالبيانات -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- مشغل الصوت -->
+        <div class="audio-player" id="audioPlayer">
+            <div class="player-controls">
+                <button class="player-btn" id="prevBtn">
+                    <i class="fas fa-backward"></i>
+                </button>
+                
+                <div class="player-info">
+                    <div class="surah-name" id="playerSurahName">سورة الفاتحة</div>
+                    <div class="reciter-name" id="playerReciterName">مشاري العفاسي</div>
+                </div>
+                
+                <button class="player-btn play-btn" id="playBtn">
+                    <i class="fas fa-play" id="playIcon"></i>
+                </button>
+                
+                <button class="player-btn" id="nextBtn">
+                    <i class="fas fa-forward"></i>
+                </button>
+                
+                <button class="player-btn" id="closePlayerBtn">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="mini-player-text">
-                <h4 id="miniPlayerTitle">لم يتم اختيار تلاوة</h4>
-                <p id="miniPlayerSubtitle">اختر قارئاً وسورة للبدء</p>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
             </div>
         </div>
-        <div class="mini-player-controls">
-            <div class="mini-play-btn" id="miniPlayBtn">
-                <i class="fas fa-play"></i>
+
+        <!-- الشريط الجانبي -->
+        <div class="overlay" id="overlay"></div>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">القائمة الرئيسية</h2>
+                <button class="close-sidebar" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-        </div>
+            
+            <div class="list-item" data-tab="surahs">
+                <div class="list-item-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">سور القرآن</div>
+                    <div class="list-item-subtitle">استمع واقرأ جميع سور القرآن</div>
+                </div>
+            </div>
+            
+            <div class="list-item" data-tab="reciters">
+                <div class="list-item-icon">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">القراء</div>
+                    <div class="list-item-subtitle">استمع لأشهر قراء القرآن</div>
+                </div>
+            </div>
+            
+            <div class="list-item" data-tab="radio">
+                <div class="list-item-icon">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">الإذاعات</div>
+                    <div class="list-item-subtitle">بث مباشر لإذاعات القرآن</div>
+                </div>
+            </div>
+            
+            <div class="list-item" data-tab="tv">
+                <div class="list-item-icon">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">القنوات</div>
+                    <div class="list-item-subtitle">قنوات تلفزيونية للقرآن الكريم</div>
+                </div>
+            </div>
+            
+            <div class="list-item" data-tab="tafasir">
+                <div class="list-item-icon">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">التفاسير</div>
+                    <div class="list-item-subtitle">شروح وتفاسير القرآن الكريم</div>
+                </div>
+            </div>
+            
+            <div class="list-item" data-tab="recent">
+                <div class="list-item-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">المؤخرات</div>
+                    <div class="list-item-subtitle">السور المستمع لها مؤخراً</div>
+                </div>
+            </div>
+            
+            <div class="list-item" id="settingsBtn">
+                <div class="list-item-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">الإعدادات</div>
+                    <div class="list-item-subtitle">تعديل إعدادات التطبيق</div>
+                </div>
+            </div>
+            
+            <div class="list-item" id="aboutBtn">
+                <div class="list-item-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">حول التطبيق</div>
+                    <div class="list-item-subtitle">معلومات عن تطبيق القرآن الكريم</div>
+                </div>
+            </div>
+        </aside>
     </div>
-
-    <!-- مشغل الصوت -->
-    <audio id="audioPlayer" preload="metadata"></audio>
 
     <script>
-        // البيانات والمتغيرات
-        let reciters = [];
-        let suwar = [];
-        let tafsir = [];
-        let riwayat = [];
-        let languages = [];
-        let filteredReciters = [];
-        let currentRiwaya = "حفص";
-
-        // حالة التطبيق
-        const appState = {
-            currentReciter: null,
-            currentSurah: null,
-            isPlaying: false,
-            currentTime: 0,
-            volume: 0.8
-        };
-
-        // العناصر
-        const sections = document.querySelectorAll('.section');
-        const navTabs = document.querySelectorAll('.nav-tab');
+        // البيانات الأولية والمتغيرات العامة
+        let currentTab = 'surahs';
+        let currentAudio = null;
+        let currentSurah = null;
+        let currentReciter = null;
+        let recitersData = [];
+        let surahsData = [];
+        let languagesData = [];
+        let riwayatData = [];
+        let recentReadsData = [];
+        let radiosData = [];
+        let tafasirData = [];
+        let videosData = [];
+        let videoTypesData = [];
+        
+        // عناصر DOM
+        const tabElements = document.querySelectorAll('.tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const closeSidebar = document.getElementById('closeSidebar');
         const audioPlayer = document.getElementById('audioPlayer');
         const playBtn = document.getElementById('playBtn');
-        const miniPlayBtn = document.getElementById('miniPlayBtn');
+        const playIcon = document.getElementById('playIcon');
+        const closePlayerBtn = document.getElementById('closePlayerBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const progressBar = document.getElementById('progressBar');
-        const audioProgress = document.getElementById('audioProgress');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const miniPlayer = document.getElementById('miniPlayer');
-        const searchBox = document.getElementById('searchBox');
-        const searchInput = document.getElementById('searchInput');
-        const riwayaFilter = document.getElementById('riwayaFilter');
-        const volumeSlider = document.getElementById('volumeSlider');
-
-        // تحميل البيانات
-        async function loadData() {
+        const playerSurahName = document.getElementById('playerSurahName');
+        const playerReciterName = document.getElementById('playerReciterName');
+        
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين معالج الأحداث للألسنة
+            tabElements.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+            
+            // معالج أحداث القائمة الجانبية
+            menuBtn.addEventListener('click', openSidebar);
+            closeSidebar.addEventListener('click', closeSidebarFunc);
+            overlay.addEventListener('click', closeSidebarFunc);
+            
+            // معالج أحداث مشغل الصوت
+            closePlayerBtn.addEventListener('click', closeAudioPlayer);
+            playBtn.addEventListener('click', togglePlayPause);
+            prevBtn.addEventListener('click', playPrevious);
+            nextBtn.addEventListener('click', playNext);
+            
+            // معالج أحداث العناصر في القائمة الجانبية
+            document.querySelectorAll('.sidebar .list-item[data-tab]').forEach(item => {
+                item.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                    closeSidebarFunc();
+                });
+            });
+            
+            // جلب البيانات من الـ APIs
+            fetchInitialData();
+            
+            // تحميل السور على الفور (أول تبويب)
+            fetchSurahs();
+        });
+        
+        // تبديل التبويبات
+        function switchTab(tabId) {
+            // تحديد التبويب النشط
+            tabElements.forEach(tab => {
+                if (tab.dataset.tab === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // تحديد المحتوى النشط
+            contentSections.forEach(section => {
+                if (section.id === tabId) {
+                    section.classList.add('active');
+                    
+                    // تحميل البيانات الخاصة بهذا التبويب إذا لم تكن محملة مسبقاً
+                    if (tabId === 'surahs' && surahsData.length === 0) {
+                        fetchSurahs();
+                    } else if (tabId === 'reciters' && recitersData.length === 0) {
+                        fetchReciters();
+                    } else if (tabId === 'radio' && radiosData.length === 0) {
+                        fetchRadios();
+                    } else if (tabId === 'tv' && videosData.length === 0) {
+                        fetchVideos();
+                    } else if (tabId === 'tafasir' && tafasirData.length === 0) {
+                        fetchTafasir();
+                    } else if (tabId === 'recent' && recentReadsData.length === 0) {
+                        fetchRecentReads();
+                    }
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            
+            currentTab = tabId;
+        }
+        
+        // فتح القائمة الجانبية
+        function openSidebar() {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+        
+        // إغلاق القائمة الجانبية
+        function closeSidebarFunc() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        
+        // جلب البيانات الأولية
+        async function fetchInitialData() {
             try {
-                // تحميل القراء
-                const recitersRes = await fetch('https://mp3quran.net/api/v3/reciters?language=ar');
-                const recitersData = await recitersRes.json();
-                reciters = recitersData.reciters || [];
-                filteredReciters = reciters.filter(r => 
-                    r.rewaya && r.rewaya.includes(currentRiwaya)
-                );
-                displayReciters();
+                // جلب اللغات
+                const languagesResponse = await fetch('https://mp3quran.net/api/v3/languages');
+                languagesData = await languagesResponse.json();
                 
-                // تحميل السور
-                const suwarRes = await fetch('https://mp3quran.net/api/v3/suwar');
-                const suwarData = await suwarRes.json();
-                suwar = suwarData.suwar || [];
-                displaySuwar();
+                // جلب الروايات
+                const riwayatResponse = await fetch('https://mp3quran.net/api/v3/riwayat');
+                riwayatData = await riwayatResponse.json();
+                populateRiwayatSelect();
                 
-                // تحميل التفسير
-                const tafsirRes = await fetch('https://mp3quran.net/api/v3/tafasir');
-                const tafsirData = await tafsirRes.json();
-                tafsir = tafsirData.tafasir || [];
-                displayTafsir();
-                
-                // تحميل الروايات
-                const riwayatRes = await fetch('https://mp3quran.net/api/v3/riwayat');
-                const riwayatData = await riwayatRes.json();
-                riwayat = riwayatData.riwayat || [];
-                
-                // تحميل اللغات
-                const langsRes = await fetch('https://mp3quran.net/api/v3/languages');
-                const langsData = await langsRes.json();
-                languages = langsData.languages || [];
-                
-                // تعيين قيم افتراضية
-                if (filteredReciters.length > 0) {
-                    appState.currentReciter = filteredReciters[0];
-                }
-                if (suwar.length > 0) {
-                    appState.currentSurah = suwar[0];
-                }
-                
-                updatePlayerInfo();
-                showNotification('تم تحميل البيانات بنجاح');
+                // جلب أنواع الفيديو
+                const videoTypesResponse = await fetch('https://mp3quran.net/api/v3/video_types');
+                videoTypesData = await videoTypesResponse.json();
+                populateVideoTypesSelect();
                 
             } catch (error) {
-                console.error('خطأ في تحميل البيانات:', error);
-                showError('حدث خطأ في تحميل البيانات. تحقق من اتصالك بالإنترنت.');
+                console.error('Error fetching initial data:', error);
+                showError('حدث خطأ في تحميل البيانات الأساسية');
             }
         }
-
-        // عرض القراء
-        function displayReciters() {
-            const container = document.getElementById('reciters-list');
+        
+        // جلب قائمة السور
+        async function fetchSurahs() {
+            try {
+                const response = await fetch('https://mp3quran.net/api/v3/suwar');
+                const data = await response.json();
+                surahsData = data.suwar || [];
+                displaySurahs(surahsData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('surahsLoading').style.display = 'none';
+                document.getElementById('surahsList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching surahs:', error);
+                document.getElementById('surahsLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل قائمة السور. يرجى المحاولة مرة أخرى.</p>';
+            }
+        }
+        
+        // عرض قائمة السور
+        function displaySurahs(surahs) {
+            const container = document.getElementById('surahsContainer');
             container.innerHTML = '';
             
-            if (filteredReciters.length === 0) {
-                container.innerHTML = `
-                    <div class="error">
-                        <i class="fas fa-user-slash"></i>
-                        <p>لا يوجد قراء بهذه الرواية</p>
-                        <button onclick="changeRiwaya('حفص')" style="
-                            margin-top: 15px;
-                            padding: 8px 20px;
-                            background: var(--primary);
-                            color: white;
-                            border: none;
-                            border-radius: 20px;
-                            cursor: pointer;
-                        ">عرض قراء حفص</button>
-                    </div>`;
+            if (surahs.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد سور للعرض</p>';
                 return;
             }
             
-            filteredReciters.forEach(reciter => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.innerHTML = `
-                    <div class="list-item-icon" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}, #${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')})">
-                        ${reciter.name.charAt(0)}
-                    </div>
-                    <div class="list-item-content">
-                        <div class="list-item-title">${reciter.name}</div>
-                        <div class="list-item-subtitle">
-                            ${reciter.rewaya || 'رواية حفص'}
-                            ${reciter.count ? ` • ${reciter.count} تلاوة` : ''}
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-left" style="color: #aaa;"></i>
-                `;
+            surahs.forEach(surah => {
+                const surahElement = document.createElement('div');
+                surahElement.className = 'list-item';
+                surahElement.dataset.surahId = surah.id;
                 
-                item.addEventListener('click', () => selectReciter(reciter));
-                container.appendChild(item);
-            });
-        }
-
-        // عرض السور
-        function displaySuwar() {
-            const container = document.getElementById('suwar-list');
-            container.innerHTML = '';
-            
-            suwar.forEach(surah => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                item.style.position = 'relative';
-                item.innerHTML = `
-                    <div class="surah-number">${surah.id}</div>
-                    <div class="list-item-icon" style="background: linear-gradient(135deg, #2c786c, #004445);">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <div class="list-item-content">
-                        <div class="list-item-title">${surah.name}</div>
-                        <div class="list-item-subtitle">
-                            ${surah.translated_name || ''} • ${surah.verses_count} آية
-                            <br>
-                            <span style="color: var(--primary); font-size: 0.85rem;">
-                                ${surah.type === 'meccan' ? 'مكية' : 'مدنية'}
-                            </span>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-left" style="color: #aaa;"></i>
-                `;
-                
-                item.addEventListener('click', () => selectSurah(surah));
-                container.appendChild(item);
-            });
-        }
-
-        // عرض التفاسير
-        function displayTafsir() {
-            const container = document.getElementById('tafsir-list');
-            container.innerHTML = '';
-            
-            tafsir.forEach(item => {
-                const tafsirItem = document.createElement('div');
-                tafsirItem.className = 'list-item';
-                tafsirItem.innerHTML = `
+                surahElement.innerHTML = `
                     <div class="list-item-icon">
                         <i class="fas fa-book"></i>
                     </div>
                     <div class="list-item-content">
-                        <div class="list-item-title">${item.name}</div>
-                        <div class="list-item-subtitle">
-                            ${item.author || ''}
-                            ${item.language ? ` • ${item.language}` : ''}
-                        </div>
+                        <div class="list-item-title">${surah.name} (${surah.transliteration})</div>
+                        <div class="list-item-subtitle">عدد الآيات: ${surah.count} | نوع السورة: ${surah.type}</div>
                     </div>
-                    <i class="fas fa-chevron-left" style="color: #aaa;"></i>
                 `;
                 
-                container.appendChild(tafsirItem);
-            });
-        }
-
-        // اختيار قارئ
-        function selectReciter(reciter) {
-            appState.currentReciter = reciter;
-            updatePlayerInfo();
-            switchTab('player');
-            showNotification(`تم اختيار القارئ: ${reciter.name}`);
-        }
-
-        // اختيار سورة
-        function selectSurah(surah) {
-            appState.currentSurah = surah;
-            updatePlayerInfo();
-            switchTab('player');
-            
-            if (appState.currentReciter) {
-                playAudio();
-            } else {
-                showNotification(`تم اختيار سورة: ${surah.name}. اختر قارئاً الآن`);
-            }
-        }
-
-        // تحديث معلومات المشغل
-        function updatePlayerInfo() {
-            const reciterName = appState.currentReciter ? appState.currentReciter.name : 'اختر قارئاً';
-            const surahName = appState.currentSurah ? appState.currentSurah.name : 'اختر سورة';
-            
-            document.getElementById('current-reciter').textContent = reciterName;
-            document.getElementById('current-surah').textContent = surahName;
-            document.getElementById('miniPlayerTitle').textContent = surahName;
-            document.getElementById('miniPlayerSubtitle').textContent = `القارئ: ${reciterName}`;
-            
-            if (appState.currentReciter && appState.currentSurah) {
-                miniPlayer.classList.add('active');
-            }
-        }
-
-        // تشغيل الصوت
-        function playAudio() {
-            if (!appState.currentReciter || !appState.currentSurah) {
-                showNotification('الرجاء اختيار قارئ وسورة أولاً');
-                return;
-            }
-            
-            // رابط التلاوة (في التطبيق الحقيقي سيأتي من API)
-            const audioUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${appState.currentSurah.id}.mp3`;
-            
-            audioPlayer.src = audioUrl;
-            audioPlayer.volume = appState.volume;
-            audioPlayer.play();
-            
-            appState.isPlaying = true;
-            updatePlayButtons();
-            showNotification(`جاري تشغيل: ${appState.currentSurah.name}`);
-        }
-
-        // التحكم في الصوت
-        function togglePlay() {
-            if (!audioPlayer.src) {
-                playAudio();
-                return;
-            }
-            
-            if (appState.isPlaying) {
-                audioPlayer.pause();
-                appState.isPlaying = false;
-            } else {
-                audioPlayer.play();
-                appState.isPlaying = true;
-            }
-            
-            updatePlayButtons();
-        }
-
-        // تحديث أزرار التشغيل
-        function updatePlayButtons() {
-            const icon = appState.isPlaying ? 'fa-pause' : 'fa-play';
-            playBtn.innerHTML = `<i class="fas ${icon}"></i>`;
-            miniPlayBtn.innerHTML = `<i class="fas ${icon}"></i>`;
-            
-            if (appState.isPlaying) {
-                playBtn.classList.add('pulse');
-            } else {
-                playBtn.classList.remove('pulse');
-            }
-        }
-
-        // تغيير الرواية
-        function changeRiwaya(riwaya) {
-            currentRiwaya = riwaya;
-            riwayaFilter.textContent = riwaya;
-            filteredReciters = reciters.filter(r => 
-                r.rewaya && r.rewaya.includes(riwaya)
-            );
-            displayReciters();
-            showNotification(`تم التصفية برواية: ${riwaya}`);
-        }
-
-        // تبديل الأقسام
-        function switchTab(tabId) {
-            navTabs.forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === tabId);
-            });
-            
-            sections.forEach(section => {
-                section.classList.toggle('active', section.id === `${tabId}-section`);
-            });
-            
-            // إخفاء البحث عند تغيير القسم
-            searchBox.style.display = 'none';
-        }
-
-        // إظهار إشعار
-        function showNotification(message) {
-            // إنشاء عنصر الإشعار
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: var(--primary);
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-                max-width: 300px;
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // إظهار خطأ
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error';
-            errorDiv.innerHTML = `
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>${message}</p>
-            `;
-            
-            // استبدال محتوى القراء بالخطأ
-            document.getElementById('reciters-list').innerHTML = '';
-            document.getElementById('reciters-list').appendChild(errorDiv);
-        }
-
-        // تهيئة الأحداث
-        function initEvents() {
-            // أحداث التبويبات
-            navTabs.forEach(tab => {
-                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-            });
-            
-            // حدث البحث
-            document.getElementById('searchToggle').addEventListener('click', () => {
-                searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-                if (searchBox.style.display === 'block') {
-                    searchInput.focus();
-                }
-            });
-            
-            // أحداث المشغل
-            playBtn.addEventListener('click', togglePlay);
-            miniPlayBtn.addEventListener('click', togglePlay);
-            
-            prevBtn.addEventListener('click', () => {
-                if (appState.currentSurah && appState.currentSurah.id > 1) {
-                    const prevSurah = suwar.find(s => s.id === appState.currentSurah.id - 1);
-                    if (prevSurah) {
-                        selectSurah(prevSurah);
-                    }
-                }
-            });
-            
-            nextBtn.addEventListener('click', () => {
-                if (appState.currentSurah && appState.currentSurah.id < 114) {
-                    const nextSurah = suwar.find(s => s.id === appState.currentSurah.id + 1);
-                    if (nextSurah) {
-                        selectSurah(nextSurah);
-                    }
-                }
-            });
-            
-            // شريط التقدم
-            progressBar.addEventListener('click', (e) => {
-                const rect = progressBar.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                if (audioPlayer.duration) {
-                    audioPlayer.currentTime = percent * audioPlayer.duration;
-                }
-            });
-            
-            audioPlayer.addEventListener('timeupdate', () => {
-                if (audioPlayer.duration) {
-                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                    audioProgress.style.width = `${percent}%`;
-                    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
-                    durationEl.textContent = formatTime(audioPlayer.duration);
-                }
-            });
-            
-            // الصوت
-            volumeSlider.addEventListener('input', (e) => {
-                appState.volume = e.target.value / 100;
-                audioPlayer.volume = appState.volume;
-            });
-            
-            // الرواية
-            riwayaFilter.addEventListener('click', () => {
-                const riwayas = ['حفص', 'ورش', 'قالون', 'الدوري', 'السوسي'];
-                const currentIndex = riwayas.indexOf(currentRiwaya);
-                const nextIndex = (currentIndex + 1) % riwayas.length;
-                changeRiwaya(riwayas[nextIndex]);
-            });
-            
-            // البحث
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
+                surahElement.addEventListener('click', () => {
+                    openSurahDetails(surah);
+                });
                 
-                // البحث في القراء
-                filteredReciters = reciters.filter(r => 
-                    r.name.toLowerCase().includes(query) ||
-                    (r.rewaya && r.rewaya.toLowerCase().includes(query))
-                );
-                displayReciters();
+                container.appendChild(surahElement);
             });
         }
-
-        // تنسيق الوقت
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        
+        // جلب قائمة القراء
+        async function fetchReciters() {
+            try {
+                document.getElementById('recitersLoading').style.display = 'flex';
+                document.getElementById('recitersList').style.display = 'none';
+                
+                const response = await fetch('https://mp3quran.net/api/v3/reciters');
+                const data = await response.json();
+                recitersData = data.reciters || [];
+                displayReciters(recitersData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('recitersLoading').style.display = 'none';
+                document.getElementById('recitersList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching reciters:', error);
+                document.getElementById('recitersLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل قائمة القراء. يرجى المحاولة مرة أخرى.</p>';
+            }
         }
-
-        // بدء التطبيق
-        document.addEventListener('DOMContentLoaded', () => {
-            // إضافة أنماط CSS للأنيميشن
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
+        
+        // عرض قائمة القراء
+        function displayReciters(reciters) {
+            const container = document.getElementById('recitersContainer');
+            container.innerHTML = '';
             
-            initEvents();
-            loadData();
+            if (reciters.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد قراء للعرض</p>';
+                return;
+            }
+            
+            reciters.forEach(reciter => {
+                const reciterElement = document.createElement('div');
+                reciterElement.className = 'list-item';
+                reciterElement.dataset.reciterId = reciter.id;
+                
+                reciterElement.innerHTML = `
+                    <div class="list-item-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${reciter.name}</div>
+                        <div class="list-item-subtitle">${reciter.rewaya || 'روايات متعددة'} | ${reciter.count || 0} تسجيل</div>
+                    </div>
+                `;
+                
+                reciterElement.addEventListener('click', () => {
+                    openReciterDetails(reciter);
+                });
+                
+                container.appendChild(reciterElement);
+            });
+        }
+        
+        // جلب قائمة الإذاعات
+        async function fetchRadios() {
+            try {
+                document.getElementById('radioLoading').style.display = 'flex';
+                document.getElementById('radioList').style.display = 'none';
+                
+                const response = await fetch('https://mp3quran.net/api/v3/radios');
+                const data = await response.json();
+                radiosData = data.radios || [];
+                displayRadios(radiosData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('radioLoading').style.display = 'none';
+                document.getElementById('radioList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching radios:', error);
+                document.getElementById('radioLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل قائمة الإذاعات. يرجى المحاولة مرة أخرى.</p>';
+            }
+        }
+        
+        // عرض قائمة الإذاعات
+        function displayRadios(radios) {
+            const container = document.getElementById('radioContainer');
+            container.innerHTML = '';
+            
+            if (radios.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد إذاعات للعرض</p>';
+                return;
+            }
+            
+            radios.forEach(radio => {
+                const radioElement = document.createElement('div');
+                radioElement.className = 'list-item';
+                
+                radioElement.innerHTML = `
+                    <div class="list-item-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${radio.name}</div>
+                        <div class="list-item-subtitle">${radio.url || 'بث مباشر'}</div>
+                    </div>
+                    <button class="player-btn" style="width: 35px; height: 35px;" title="تشغيل الإذاعة">
+                        <i class="fas fa-play"></i>
+                    </button>
+                `;
+                
+                const playBtn = radioElement.querySelector('.player-btn');
+                playBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    playRadio(radio);
+                });
+                
+                container.appendChild(radioElement);
+            });
+        }
+        
+        // جلب قائمة الفيديوهات
+        async function fetchVideos() {
+            try {
+                document.getElementById('tvLoading').style.display = 'flex';
+                document.getElementById('tvList').style.display = 'none';
+                
+                const response = await fetch('https://mp3quran.net/api/v3/videos');
+                const data = await response.json();
+                videosData = data.videos || [];
+                displayVideos(videosData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('tvLoading').style.display = 'none';
+                document.getElementById('tvList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+                document.getElementById('tvLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل قائمة الفيديوهات. يرجى المحاولة مرة أخرى.</p>';
+            }
+        }
+        
+        // عرض قائمة الفيديوهات
+        function displayVideos(videos) {
+            const container = document.getElementById('tvContainer');
+            container.innerHTML = '';
+            
+            if (videos.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد فيديوهات للعرض</p>';
+                return;
+            }
+            
+            videos.forEach(video => {
+                const videoElement = document.createElement('div');
+                videoElement.className = 'list-item';
+                
+                videoElement.innerHTML = `
+                    <div class="list-item-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${video.title || 'فيديو بدون عنوان'}</div>
+                        <div class="list-item-subtitle">${video.reciter_name || ''} | ${video.surah_name || ''}</div>
+                    </div>
+                    <button class="player-btn" style="width: 35px; height: 35px;" title="تشغيل الفيديو">
+                        <i class="fas fa-play"></i>
+                    </button>
+                `;
+                
+                const playBtn = videoElement.querySelector('.player-btn');
+                playBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    playVideo(video);
+                });
+                
+                container.appendChild(videoElement);
+            });
+        }
+        
+        // جلب قائمة التفاسير
+        async function fetchTafasir() {
+            try {
+                document.getElementById('tafasirLoading').style.display = 'flex';
+                document.getElementById('tafasirList').style.display = 'none';
+                
+                const response = await fetch('https://mp3quran.net/api/v3/tafasir');
+                const data = await response.json();
+                tafasirData = data.tafasir || [];
+                displayTafasir(tafasirData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('tafasirLoading').style.display = 'none';
+                document.getElementById('tafasirList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching tafasir:', error);
+                document.getElementById('tafasirLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل قائمة التفاسير. يرجى المحاولة مرة أخرى.</p>';
+            }
+        }
+        
+        // عرض قائمة التفاسير
+        function displayTafasir(tafasir) {
+            const container = document.getElementById('tafasirContainer');
+            container.innerHTML = '';
+            
+            if (tafasir.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد تفاسير للعرض</p>';
+                return;
+            }
+            
+            tafasir.forEach(tafsir => {
+                const tafsirElement = document.createElement('div');
+                tafsirElement.className = 'list-item';
+                
+                tafsirElement.innerHTML = `
+                    <div class="list-item-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${tafsir.name || 'تفسير بدون عنوان'}</div>
+                        <div class="list-item-subtitle">${tafsir.language || ''} | ${tafsir.author || ''}</div>
+                    </div>
+                `;
+                
+                container.appendChild(tafsirElement);
+            });
+        }
+        
+        // جلب السور المستمع لها مؤخراً
+        async function fetchRecentReads() {
+            try {
+                document.getElementById('recentLoading').style.display = 'flex';
+                document.getElementById('recentList').style.display = 'none';
+                
+                const response = await fetch('https://mp3quran.net/api/v3/recent_reads');
+                const data = await response.json();
+                recentReadsData = data.recent_reads || [];
+                displayRecentReads(recentReadsData);
+                
+                // إخفاء رسالة التحميل
+                document.getElementById('recentLoading').style.display = 'none';
+                document.getElementById('recentList').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching recent reads:', error);
+                document.getElementById('recentLoading').innerHTML = 
+                    '<p style="color: #dc3545;">حدث خطأ في تحميل السور المستمع لها مؤخراً. يرجى المحاولة مرة أخرى.</p>';
+            }
+        }
+        
+        // عرض السور المستمع لها مؤخراً
+        function displayRecentReads(recentReads) {
+            const container = document.getElementById('recentContainer');
+            container.innerHTML = '';
+            
+            if (recentReads.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">لا توجد سور مستمع لها مؤخراً</p>';
+                return;
+            }
+            
+            recentReads.forEach(recent => {
+                const recentElement = document.createElement('div');
+                recentElement.className = 'list-item';
+                
+                recentElement.innerHTML = `
+                    <div class="list-item-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${recent.surah_name || 'سورة غير معروفة'}</div>
+                        <div class="list-item-subtitle">${recent.reciter_name || ''} | ${recent.date || ''}</div>
+                    </div>
+                `;
+                
+                container.appendChild(recentElement);
+            });
+        }
+        
+        // ملء قائمة الروايات في التحديد
+        function populateRiwayatSelect() {
+            const select = document.getElementById('riwayatSelect');
+            
+            if (riwayatData && riwayatData.riwayat) {
+                riwayatData.riwayat.forEach(riwaya => {
+                    const option = document.createElement('option');
+                    option.value = riwaya.id;
+                    option.textContent = riwaya.name;
+                    select.appendChild(option);
+                });
+            }
+            
+            // إضافة حدث تغيير لتصفية القراء حسب الرواية
+            select.addEventListener('change', function() {
+                if (this.value === 'all') {
+                    displayReciters(recitersData);
+                } else {
+                    const filteredReciters = recitersData.filter(reciter => 
+                        reciter.rewaya && reciter.rewaya.includes(this.options[this.selectedIndex].text)
+                    );
+                    displayReciters(filteredReciters);
+                }
+            });
+        }
+        
+        // ملء قائمة أنواع الفيديو في التحديد
+        function populateVideoTypesSelect() {
+            const select = document.getElementById('videoTypeSelect');
+            
+            if (videoTypesData && videoTypesData.video_types) {
+                videoTypesData.video_types.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id;
+                    option.textContent = type.name;
+                    select.appendChild(option);
+                });
+            }
+            
+            // إضافة حدث تغيير لتصفية الفيديوهات حسب النوع
+            select.addEventListener('change', function() {
+                if (this.value === 'all') {
+                    displayVideos(videosData);
+                } else {
+                    const filteredVideos = videosData.filter(video => 
+                        video.type_id == this.value
+                    );
+                    displayVideos(filteredVideos);
+                }
+            });
+        }
+        
+        // فتح تفاصيل السورة
+        function openSurahDetails(surah) {
+            // في التطبيق الكامل، هنا سيتم فتح صفحة تفاصيل السورة مع الآيات
+            // لكن للتبسيط، سنقوم بتشغيل السورة مباشرة مع قارئ افتراضي
+            
+            // اختيار قارئ افتراضي (أول قارئ في القائمة)
+            const defaultReciter = recitersData.length > 0 ? recitersData[0] : {id: 1, name: 'مشاري العفاسي'};
+            
+            playSurah(surah, defaultReciter);
+        }
+        
+        // فتح تفاصيل القارئ
+        function openReciterDetails(reciter) {
+            // في التطبيق الكامل، هنا سيتم فتح صفحة تفاصيل القارئ مع سوره
+            // لكن للتبسيط، سنقوم بعرض رسالة
+            alert(`سيتم قريباً إضافة صفحة تفاصيل القارئ: ${reciter.name}\nمع قائمة السور المتاحة لهذا القارئ.`);
+        }
+        
+        // تشغيل السورة
+        function playSurah(surah, reciter) {
+            currentSurah = surah;
+            currentReciter = reciter;
+            
+            // تحديث واجهة المشغل
+            playerSurahName.textContent = surah.name || 'سورة غير معروفة';
+            playerReciterName.textContent = reciter.name || 'قارئ غير معروف';
+            
+            // إظهار مشغل الصوت
+            audioPlayer.style.display = 'block';
+            
+            // في التطبيق الكامل، هنا سيتم تحميل وتشغيل الصوت الفعلي من الـ API
+            // لكن للتوضيح، سنقوم بمحاكاة المشغل فقط
+            
+            // إعادة تعيين أيقونة التشغيل
+            playIcon.className = 'fas fa-pause';
+            
+            // إضافة السورة إلى القائمة المؤخرات (محاكاة)
+            addToRecentReads(surah, reciter);
+            
+            // عرض رسالة توضيحية
+            showMessage(`جاري تحميل سورة ${surah.name} بصوت ${reciter.name}...`);
+        }
+        
+        // تشغيل الإذاعة
+        function playRadio(radio) {
+            // في التطبيق الكامل، هنا سيتم تشغيل البث المباشر للإذاعة
+            showMessage(`جاري تشغيل إذاعة ${radio.name}...`);
+            
+            // تحديث واجهة المشغل
+            playerSurahName.textContent = radio.name;
+            playerReciterName.textContent = 'بث مباشر';
+            
+            // إظهار مشغل الصوت
+            audioPlayer.style.display = 'block';
+            
+            // إعادة تعيين أيقونة التشغيل
+            playIcon.className = 'fas fa-pause';
+        }
+        
+        // تشغيل الفيديو
+        function playVideo(video) {
+            // في التطبيق الكامل، هنا سيتم تشغيل الفيديو
+            showMessage(`جاري تشغيل الفيديو: ${video.title || 'فيديو بدون عنوان'}...`);
+        }
+        
+        // تبديل التشغيل/الإيقاف المؤقت
+        function togglePlayPause() {
+            if (playIcon.className.includes('fa-play')) {
+                playIcon.className = 'fas fa-pause';
+                showMessage('جاري التشغيل...');
+            } else {
+                playIcon.className = 'fas fa-play';
+                showMessage('متوقف مؤقتاً...');
+            }
+        }
+        
+        // تشغيل السابقة
+        function playPrevious() {
+            showMessage('جاري تشغيل السورة السابقة...');
+        }
+        
+        // تشغيل التالية
+        function playNext() {
+            showMessage('جاري تشغيل السورة التالية...');
+        }
+        
+        // إغلاق مشغل الصوت
+        function closeAudioPlayer() {
+            audioPlayer.style.display = 'none';
+            if (playIcon.className.includes('fa-pause')) {
+                playIcon.className = 'fas fa-play';
+            }
+        }
+        
+        // إضافة السورة إلى القائمة المؤخرات (محاكاة)
+        function addToRecentReads(surah, reciter) {
+            const recentRead = {
+                surah_name: surah.name,
+                reciter_name: reciter.name,
+                date: new Date().toLocaleDateString('ar-SA')
+            };
+            
+            // إضافة في بداية المصفوفة
+            recentReadsData.unshift(recentRead);
+            
+            // تحديث عرض المؤخرات إذا كان التبويب مفتوحاً
+            if (currentTab === 'recent' && document.getElementById('recentList').style.display !== 'none') {
+                displayRecentReads(recentReadsData);
+            }
+        }
+        
+        // عرض رسالة للمستخدم
+        function showMessage(message) {
+            // في التطبيق الكامل، يمكن استخدام toast أو snackbar
+            // لكن للتبسيط، سنستخدم alert
+            console.log(message);
+            // alert(message); // يمكن تفعيله للاختبار
+        }
+        
+        // عرض خطأ
+        function showError(error) {
+            console.error(error);
+            // في التطبيق الكامل، يمكن عرض رسالة خطأ منسقة
+            alert(`خطأ: ${error}`);
+        }
+        
+        // البحث (وظيفة أساسية)
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            alert('سيتم قريباً إضافة وظيفة البحث المتقدمة في السور والقراء.');
         });
+        
+        // الإعدادات (وظيفة أساسية)
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            closeSidebarFunc();
+            alert('صفحة الإعدادات قيد التطوير. ستشمل:\n- تغيير الخط\n- حجم الخط\n- خلفيات التطبيق\n- إعدادات الصوت');
+        });
+        
+        // حول التطبيق (وظيفة أساسية)
+        document.getElementById('aboutBtn').addEventListener('click', function() {
+            closeSidebarFunc();
+            alert('تطبيق القرآن الكريم\n\nإصدار: 1.0.0\n\nهو تطبيق مجاني متكامل للقرآن الكريم يوفر:\n- استماع للقرآن بأصوات متنوعة\n- بث مباشر للإذاعات والقنوات\n- تفاسير القرآن الكريم\n- واجهة مستخدم بسيطة وسهلة\n\nتم التطوير باستخدام واجهات برمجة تطبيقات mp3quran.net');
+        });
+        
+        // اختيار اللغة (وظيفة أساسية)
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const lang = this.value;
+            showMessage(`تم تغيير اللغة إلى ${this.options[this.selectedIndex].text}. سيتم تطبيق التغيير على النصوص في التطبيق.`);
+            
+            // في التطبيق الكامل، هنا سيتم تغيير لغة الواجهة والنصوص
+            if (lang === 'ar') {
+                document.body.style.direction = 'rtl';
+                document.body.style.textAlign = 'right';
+            } else if (lang === 'en') {
+                document.body.style.direction = 'ltr';
+                document.body.style.textAlign = 'left';
+            }
+        });
+        
+        // إضافة بيانات وهمية للاختبار إذا فشلت الطلبات
+        function addMockDataForTesting() {
+            // بيانات وهمية للسور
+            if (surahsData.length === 0) {
+                surahsData = [
+                    {id: 1, name: 'الفاتحة', transliteration: 'Al-Fatiha', count: 7, type: 'مكية'},
+                    {id: 2, name: 'البقرة', transliteration: 'Al-Baqara', count: 286, type: 'مدنية'},
+                    {id: 3, name: 'آل عمران', transliteration: 'Al-Imran', count: 200, type: 'مدنية'},
+                    {id: 4, name: 'النساء', transliteration: 'An-Nisa', count: 176, type: 'مدنية'},
+                    {id: 5, name: 'المائدة', transliteration: 'Al-Ma\'ida', count: 120, type: 'مدنية'}
+                ];
+            }
+            
+            // بيانات وهمية للقراء
+            if (recitersData.length === 0) {
+                recitersData = [
+                    {id: 1, name: 'مشاري العفاسي', rewaya: 'حفص عن عاصم', count: 114},
+                    {id: 2, name: 'محمود خليل الحصري', rewaya: 'حفص عن عاصم', count: 114},
+                    {id: 3, name: 'عبد الباسط عبد الصمد', rewaya: 'حفص عن عاصم', count: 114},
+                    {id: 4, name: 'سعد الغامدي', rewaya: 'حفص عن عاصم', count: 114},
+                    {id: 5, name: 'أبو بكر الشاطري', rewaya: 'حفص عن عاصم', count: 114}
+                ];
+            }
+            
+            // عرض البيانات الوهمية إذا لزم الأمر
+            if (currentTab === 'surahs' && document.getElementById('surahsLoading').style.display !== 'none') {
+                displaySurahs(surahsData);
+                document.getElementById('surahsLoading').style.display = 'none';
+                document.getElementById('surahsList').style.display = 'block';
+            }
+            
+            if (currentTab === 'reciters' && document.getElementById('recitersLoading').style.display !== 'none') {
+                displayReciters(recitersData);
+                document.getElementById('recitersLoading').style.display = 'none';
+                document.getElementById('recitersList').style.display = 'block';
+            }
+        }
+        
+        // في حالة فشل تحميل البيانات، استخدم البيانات الوهمية بعد وقت قصير
+        setTimeout(addMockDataForTesting, 5000);
     </script>
 </body>
 </html>
