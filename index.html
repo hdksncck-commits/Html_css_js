@@ -2,246 +2,305 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق القرآن الكريم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق القرآن الكريم الشامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #27ae60;
-            --bg: #121212;
-            --card: #1e1e1e;
-            --text: #ffffff;
-            --accent: #f1c40f;
+            --primary: #1da1f2; /* لون عصري */
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #10b981;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding-bottom: 120px;
-            text-align: right;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            overflow-x: hidden;
         }
 
+        /* الهيدر */
         header {
-            background-color: var(--primary);
-            padding: 15px;
+            padding: 20px;
+            background: linear-gradient(to bottom, #1e293b, var(--bg-dark));
             text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .container { padding: 15px; }
-
-        .search-box {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: none;
-            background: var(--card);
-            color: white;
-            box-sizing: border-box;
+        .search-container { padding: 0 15px; margin-top: -10px; }
+        .search-input {
+            width: 100%; padding: 12px 20px;
+            border-radius: 25px; border: none;
+            background: var(--card-bg); color: white;
+            font-family: 'Cairo'; outline: none;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
-        .grid {
+        /* المحتوى الرئيسي */
+        .content-area { padding: 15px; min-height: 80vh; }
+        .section-title { font-weight: 600; margin-bottom: 15px; color: var(--accent); }
+
+        /* البطاقات */
+        .grid-container {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
         }
 
-        .card {
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            border-right: 5px solid var(--primary);
+        .item-card {
+            background: var(--card-bg);
+            padding: 15px; border-radius: 15px;
+            text-align: center; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .card:active { transform: scale(0.98); }
+        .item-card:active { transform: scale(0.95); background: #334155; }
+        .item-card i { font-size: 24px; display: block; margin-bottom: 8px; }
+        .item-name { font-size: 14px; font-weight: 600; }
+        .item-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
 
-        /* مشغل الصوت السفلي */
-        .player-footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #1a1a1a;
-            padding: 15px;
-            box-sizing: border-box;
-            border-top: 2px solid var(--primary);
-            text-align: center;
+        /* مشغل الصوت العائم */
+        .audio-player-fixed {
+            position: fixed; bottom: 70px; left: 10px; right: 10px;
+            background: var(--primary);
+            border-radius: 15px; padding: 12px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            z-index: 999; display: none;
         }
 
-        audio { width: 100%; height: 40px; }
+        .player-info { flex: 1; font-size: 12px; }
+        audio { display: none; }
 
-        .loading { text-align: center; padding: 20px; color: var(--accent); }
-        
-        /* التبويبات */
-        .tabs {
-            display: flex;
-            overflow-x: auto;
-            background: #1a1a1a;
-            padding: 10px;
-            gap: 10px;
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: #1e293b; display: flex;
+            justify-content: space-around; padding: 10px 0;
+            border-top: 1px solid #334155; z-index: 1000;
         }
 
-        .tab-btn {
-            padding: 8px 20px;
-            background: var(--card);
-            border: none;
-            color: white;
-            border-radius: 20px;
-            white-space: nowrap;
+        .nav-item {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 10px; text-align: center; flex: 1;
         }
 
-        .tab-btn.active { background: var(--primary); }
+        .nav-item.active { color: var(--primary); }
+        .nav-item svg { width: 22px; height: 22px; display: block; margin: 0 auto 4px; }
 
-        .hidden { display: none; }
+        /* شاشة التحميل */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); display: flex; justify-content: center;
+            align-items: center; z-index: 9999;
+        }
+
+        /* نمط الفيديوهات والتفسير */
+        .full-list-item {
+            background: var(--card-bg); margin-bottom: 8px;
+            padding: 15px; border-radius: 10px; display: flex; justify-content: space-between;
+        }
     </style>
 </head>
 <body>
 
+<div id="loader"><span>جاري تجهيز التطبيق...</span></div>
+
 <header>
-    <h2>القرآن الكريم</h2>
+    <h2 id="pageTitle">القرآن الكريم</h2>
+    <div class="search-container">
+        <input type="text" class="search-input" id="mainSearch" placeholder="ابحث هنا..." oninput="handleSearch(this.value)">
+    </div>
 </header>
 
-<div class="tabs">
-    <button class="tab-btn active" onclick="loadReciters()">القراء</button>
-    <button class="tab-btn" onclick="loadRadios()">الإذاعات</button>
-    <button class="tab-btn" onclick="loadLive()">بث مباشر</button>
-    <button class="tab-btn" onclick="loadTafsir()">التفسير</button>
-</div>
-
-<div class="container">
-    <input type="text" id="searchInput" class="search-box" placeholder="بحث عن قارئ أو سورة..." oninput="filterData()">
-    
-    <div id="mainContent" class="grid">
-        <div class="loading">جاري التحميل...</div>
+<div class="content-area" id="mainView">
     </div>
+
+<div class="audio-player-fixed" id="playerBar">
+    <div class="player-info">
+        <div id="trackTitle" style="font-weight: bold;">اسم السورة</div>
+        <div id="trackSub">اسم القارئ</div>
+    </div>
+    <button onclick="toggleAudio()" id="playBtn" style="background:white; border:none; border-radius:50%; width:40px; height:40px;">⏸</button>
+    <audio id="mainAudio" controls></audio>
 </div>
 
-<div class="player-footer">
-    <div id="nowPlaying" style="margin-bottom: 8px; font-size: 14px; color: var(--accent);">اختر قارئاً للبدء</div>
-    <audio id="audioPlayer" controls autoplay>
-        المتصفح لا يدعم تشغيل الصوت.
-    </audio>
-</div>
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="loadReciters()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        القراء
+    </div>
+    <div class="nav-item" onclick="loadRadios()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6H4V4h16v2zm0 4H4v2h16v-2zm0 4H4v2h16v-2zm0 4H4v2h16v-2z"/></svg>
+        راديو
+    </div>
+    <div class="nav-item" onclick="loadTafsir()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5-1.17 0-2.39.15-3.5.5V19c1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5V5z"/></svg>
+        تفسير
+    </div>
+    <div class="nav-item" onclick="loadVideos()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+        مرئيات
+    </div>
+</nav>
 
 <script>
-    const API_BASE = "https://mp3quran.net/api/v3";
-    let allReciters = [];
-    let allSurahs = [];
+    const API_URL = "https://mp3quran.net/api/v3";
+    const mainView = document.getElementById('mainView');
+    const audio = document.getElementById('mainAudio');
+    
+    let state = {
+        reciters: [],
+        surahs: [],
+        currentMode: 'reciters'
+    };
 
-    // البداية: جلب السور أولاً ثم القراء
-    async function init() {
-        try {
-            const surahRes = await fetch(`${API_BASE}/suwar`);
-            const surahData = await surahRes.json();
-            allSurahs = surahData.suwar;
-            loadReciters();
-        } catch (e) { alert("خطأ في الاتصال بالإنترنت"); }
-    }
+    // التشغيل عند البدء
+    window.onload = async () => {
+        const surahRes = await fetch(`${API_URL}/suwar`);
+        const surahData = await surahRes.json();
+        state.surahs = surahData.suwar;
+        
+        await loadReciters();
+        document.getElementById('loader').style.display = 'none';
+    };
 
     // جلب القراء
     async function loadReciters() {
-        showLoading();
-        updateTabs(0);
-        const res = await fetch(`${API_BASE}/reciters?language=ar`);
+        state.currentMode = 'reciters';
+        setActiveNav(0);
+        mainView.innerHTML = '<p>جاري تحميل قائمة القراء...</p>';
+        const res = await fetch(`${API_URL}/reciters?language=ar`);
         const data = await res.json();
-        allReciters = data.reciters;
-        displayReciters(allReciters);
+        state.reciters = data.reciters;
+        renderReciters(state.reciters);
     }
 
-    function displayReciters(list) {
-        const container = document.getElementById('mainContent');
-        container.innerHTML = list.map(r => `
-            <div class="card" onclick="viewReciterSurahs('${r.id}')">
-                <strong>${r.name}</strong><br>
-                <small>${r.moshaf[0].name}</small>
-            </div>
-        `).join('');
+    function renderReciters(list) {
+        let html = '<div class="grid-container">';
+        list.forEach(r => {
+            html += `
+                <div class="item-card" onclick="openReciter('${r.id}')">
+                    <div class="item-name">${r.name}</div>
+                    <div class="item-sub">${r.moshaf[0].name}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        mainView.innerHTML = html;
     }
 
-    // عرض سور القارئ المختار
-    async function viewReciterSurahs(reciterId) {
-        const reciter = allReciters.find(r => r.id == reciterId);
+    // فتح سور القارئ
+    function openReciter(id) {
+        const reciter = state.reciters.find(r => r.id == id);
         const moshaf = reciter.moshaf[0];
-        const surahList = moshaf.surah_list.split(',');
-
-        const container = document.getElementById('mainContent');
-        container.innerHTML = `<button onclick="loadReciters()" style="background:none; border:1px solid white; color:white; padding:5px 10px; margin-bottom:10px;">← العودة للقراء</button><h3>سور القارئ: ${reciter.name}</h3>`;
+        const sList = moshaf.surah_list.split(',');
         
-        surahList.forEach(sId => {
-            const sName = allSurahs.find(s => s.id == sId)?.name || `سورة رقم ${sId}`;
-            const url = `${moshaf.server}${sId.padStart(3, '0')}.mp3`;
-            
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.innerHTML = `<span>${sName}</span>`;
-            div.onclick = () => playAudio(url, `${reciter.name} - ${sName}`);
-            container.appendChild(div);
+        mainView.innerHTML = `<h3>${reciter.name}</h3><div class="grid-container">`;
+        sList.forEach(sId => {
+            const sName = state.surahs.find(s => s.id == sId).name;
+            const audioUrl = `${moshaf.server}${sId.padStart(3, '0')}.mp3`;
+            mainView.innerHTML += `
+                <div class="item-card" onclick="play('${audioUrl}', '${sName}', '${reciter.name}')">
+                    <div class="item-name">${sName}</div>
+                    <div class="item-sub">تشغيل الآن</div>
+                </div>
+            `;
+        });
+        mainView.innerHTML += '</div>';
+    }
+
+    // الإذاعات
+    async function loadRadios() {
+        state.currentMode = 'radios';
+        setActiveNav(1);
+        const res = await fetch(`${API_URL}/radios?language=ar`);
+        const data = await res.json();
+        mainView.innerHTML = '<div class="grid-container">';
+        data.radios.forEach(r => {
+            mainView.innerHTML += `
+                <div class="item-card" onclick="play('${r.url}', '${r.name}', 'راديو مباشر')">
+                    <div class="item-name">${r.name}</div>
+                </div>
+            `;
+        });
+        mainView.innerHTML += '</div>';
+    }
+
+    // التفسير والتدبر
+    async function loadTafsir() {
+        state.currentMode = 'tafsir';
+        setActiveNav(2);
+        const res = await fetch(`${API_URL}/tafasir?language=ar`);
+        const data = await res.json();
+        mainView.innerHTML = '<h3>التفسير الصوتي</h3>';
+        data.tafasir.soar.forEach(t => {
+            mainView.innerHTML += `
+                <div class="full-list-item" onclick="play('${t.url}', '${t.name}', 'تفسير')">
+                    <span>${t.name}</span>
+                    <small>استماع</small>
+                </div>
+            `;
         });
     }
 
-    // جلب الإذاعات
-    async function loadRadios() {
-        showLoading();
-        updateTabs(1);
-        const res = await fetch(`${API_BASE}/radios?language=ar`);
+    // المرئيات (فيديو)
+    async function loadVideos() {
+        state.currentMode = 'videos';
+        setActiveNav(3);
+        const res = await fetch(`${API_URL}/videos?language=ar`);
         const data = await res.json();
-        const container = document.getElementById('mainContent');
-        container.innerHTML = data.radios.map(r => `
-            <div class="card" onclick="playAudio('${r.url}', '${r.name}')">
-                <strong>${r.name}</strong>
-            </div>
-        `).join('');
+        mainView.innerHTML = '<h3>قنوات قرآنية</h3>';
+        data.videos.forEach(v => {
+            mainView.innerHTML += `
+                <div class="item-card" style="width:100%; margin-bottom:15px;">
+                    <div class="item-name">${v.reciter_name}</div>
+                    <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                        <source src="${v.video_url}" type="video/mp4">
+                    </video>
+                </div>
+            `;
+        });
     }
 
-    // جلب البث المباشر
-    async function loadLive() {
-        showLoading();
-        updateTabs(2);
-        const res = await fetch(`${API_BASE}/live-tv?language=ar`);
-        const data = await res.json();
-        const container = document.getElementById('mainContent');
-        container.innerHTML = data["live-tv"].map(v => `
-            <div class="card">
-                <strong>${v.name}</strong>
-                <video controls style="width:100%; margin-top:10px; border-radius:8px;">
-                    <source src="${v.url}" type="application/x-mpegURL">
-                    المتصفح لا يدعم البث المباشر هنا.
-                </video>
-            </div>
-        `).join('');
+    // نظام البحث
+    function handleSearch(val) {
+        if(state.currentMode === 'reciters') {
+            const filtered = state.reciters.filter(r => r.name.includes(val));
+            renderReciters(filtered);
+        }
     }
 
-    // وظائف مساعدة
-    function playAudio(url, title) {
-        const player = document.getElementById('audioPlayer');
-        document.getElementById('nowPlaying').innerText = "يتم الآن تشغيل: " + title;
-        player.src = url;
-        player.play();
+    // مشغل الصوت
+    function play(url, title, sub) {
+        document.getElementById('playerBar').style.display = 'flex';
+        document.getElementById('trackTitle').innerText = title;
+        document.getElementById('trackSub').innerText = sub;
+        audio.src = url;
+        audio.play();
+        document.getElementById('playBtn').innerText = '⏸';
     }
 
-    function showLoading() {
-        document.getElementById('mainContent').innerHTML = '<div class="loading">جاري التحميل...</div>';
+    function toggleAudio() {
+        if(audio.paused) {
+            audio.play();
+            document.getElementById('playBtn').innerText = '⏸';
+        } else {
+            audio.pause();
+            document.getElementById('playBtn').innerText = '▶';
+        }
     }
 
-    function updateTabs(index) {
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach((b, i) => b.classList.toggle('active', i === index));
+    function setActiveNav(idx) {
+        document.querySelectorAll('.nav-item').forEach((el, i) => {
+            el.classList.toggle('active', i === idx);
+        });
     }
-
-    function filterData() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allReciters.filter(r => r.name.toLowerCase().includes(query));
-        displayReciters(filtered);
-    }
-
-    init();
 </script>
 
 </body>
