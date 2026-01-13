@@ -1,78 +1,248 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>القرآن الكريم | تطبيق متكامل</title>
-<style>
-:root{
- --bg:#0f172a;--card:#020617;--primary:#22c55e;--text:#fff;--muted:#94a3b8;
-}
-[data-theme="light"]{
- --bg:#f8fafc;--card:#fff;--primary:#16a34a;--text:#020617;--muted:#475569;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui;background:var(--bg);color:var(--text)}
-header{padding:14px;text-align:center;font-weight:bold;background:var(--card)}
-nav{display:flex;position:fixed;bottom:0;width:100%;background:var(--card)}
-nav button{flex:1;border:none;background:none;color:var(--muted);padding:10px;font-size:12px}
-nav button.active{color:var(--primary)}
-main{padding:12px;padding-bottom:70px}
-.card{background:var(--card);padding:12px;border-radius:16px;margin-bottom:12px}
-select,input,button{width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:none}
-button.primary{background:var(--primary);color:#fff;font-weight:bold}
-audio{width:100%}
-.list{max-height:300px;overflow:auto}
-.item{padding:8px;border-bottom:1px solid #1e293b}
-.small{font-size:12px;color:var(--muted)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق القرآن الكريم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #27ae60;
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #ffffff;
+            --accent: #f1c40f;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 120px;
+            text-align: right;
+        }
+
+        header {
+            background-color: var(--primary);
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .container { padding: 15px; }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background: var(--card);
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-right: 5px solid var(--primary);
+        }
+
+        .card:active { transform: scale(0.98); }
+
+        /* مشغل الصوت السفلي */
+        .player-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 15px;
+            box-sizing: border-box;
+            border-top: 2px solid var(--primary);
+            text-align: center;
+        }
+
+        audio { width: 100%; height: 40px; }
+
+        .loading { text-align: center; padding: 20px; color: var(--accent); }
+        
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            background: #1a1a1a;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 8px 20px;
+            background: var(--card);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active { background: var(--primary); }
+
+        .hidden { display: none; }
+    </style>
 </head>
-<body data-theme="dark">
-<header>📖 القرآن الكريم</header>
-<main>
-<section id="home">
- <div class="card">
-  <input id="search" placeholder="🔍 ابحث عن سورة" oninput="filterSuwar()">
-  <select id="reciters"></select>
-  <select id="suwar"></select>
-  <button class="primary" onclick="playSurah()">▶ تشغيل السورة</button>
- </div>
- <div class="card"><audio id="player" controls></audio></div>
-</section><section id="radio" style="display:none"></section>
-<section id="tafsir" style="display:none"></section>
-<section id="videos" style="display:none"></section>
-<section id="settings" style="display:none">
- <div class="card">
-  <h3>🎨 الثيم</h3>
-  <button onclick="setTheme('dark')">داكن</button>
-  <button onclick="setTheme('light')">فاتح</button>
- </div>
- <div class="card">
-  <h3>ℹ️ عن التطبيق</h3>
-  <p class="small">تطبيق قرآن كريم متكامل (صوت – إذاعات – تفسير – فيديو) باستخدام MP3Quran API</p>
- </div>
-</section>
-</main>
-<nav>
- <button class="active" onclick="tab('home',this)">🏠</button>
- <button onclick="tab('radio',this);loadRadios()">📻</button>
- <button onclick="tab('tafsir',this);loadTafsir()">📘</button>
- <button onclick="tab('videos',this);loadVideos()">🎬</button>
- <button onclick="tab('settings',this)">⚙️</button>
-</nav>
+<body>
+
+<header>
+    <h2>القرآن الكريم</h2>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="loadReciters()">القراء</button>
+    <button class="tab-btn" onclick="loadRadios()">الإذاعات</button>
+    <button class="tab-btn" onclick="loadLive()">بث مباشر</button>
+    <button class="tab-btn" onclick="loadTafsir()">التفسير</button>
+</div>
+
+<div class="container">
+    <input type="text" id="searchInput" class="search-box" placeholder="بحث عن قارئ أو سورة..." oninput="filterData()">
+    
+    <div id="mainContent" class="grid">
+        <div class="loading">جاري التحميل...</div>
+    </div>
+</div>
+
+<div class="player-footer">
+    <div id="nowPlaying" style="margin-bottom: 8px; font-size: 14px; color: var(--accent);">اختر قارئاً للبدء</div>
+    <audio id="audioPlayer" controls autoplay>
+        المتصفح لا يدعم تشغيل الصوت.
+    </audio>
+</div>
+
 <script>
-const API='https://mp3quran.net/api/v3';let allSuwar=[];
-function tab(id,el){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';}
-async function loadReciters(){const r=await fetch(API+'/reciters?language=ar');const j=await r.json();j.reciters.forEach(x=>reciters.innerHTML+=`<option value="${x.id}">${x.name}</option>`)}
-async function loadSuwar(){const r=await fetch(API+'/suwar');const j=await r.json();allSuwar=j.suwar;renderSuwar(allSuwar)}
-function renderSuwar(l){suwar.innerHTML='';l.forEach(s=>suwar.innerHTML+=`<option value="${s.id}">${s.name}</option>`)}
-function filterSuwar(){renderSuwar(allSuwar.filter(s=>s.name.includes(search.value)))}
-async function playSurah(){const r=await fetch(API+`/reciters?id=${reciters.value}`);const j=await r.json();const server=j.reciters[0].moshaf[0].server;player.src=server+suwar.value.padStart(3,'0')+'.mp3';player.play();}
-async function loadRadios(){radio.innerHTML='<div class="card">تحميل...</div>';const r=await fetch(API+'/radios');const j=await r.json();radio.innerHTML='<div class="card list">'+j.radios.map(x=>`<div class="item" onclick="player.src='${x.url}';player.play()">📻 ${x.name}</div>`).join('')+'</div>'}
-async function loadTafsir(){tafsir.innerHTML='<div class="card">اختر سورة من الرئيسية لعرض التفسير</div>'}
-async function loadVideos(){videos.innerHTML='<div class="card">تحميل...</div>';const r=await fetch(API+'/videos');const j=await r.json();videos.innerHTML='<div class="card list">'+j.videos.slice(0,20).map(v=>`<div class="item">🎬 ${v.title}</div>`).join('')+'</div>'}
-function setTheme(t){document.body.setAttribute('data-theme',t);localStorage.theme=t}
-if(localStorage.theme)setTheme(localStorage.theme);
-loadReciters();loadSuwar();
+    const API_BASE = "https://mp3quran.net/api/v3";
+    let allReciters = [];
+    let allSurahs = [];
+
+    // البداية: جلب السور أولاً ثم القراء
+    async function init() {
+        try {
+            const surahRes = await fetch(`${API_BASE}/suwar`);
+            const surahData = await surahRes.json();
+            allSurahs = surahData.suwar;
+            loadReciters();
+        } catch (e) { alert("خطأ في الاتصال بالإنترنت"); }
+    }
+
+    // جلب القراء
+    async function loadReciters() {
+        showLoading();
+        updateTabs(0);
+        const res = await fetch(`${API_BASE}/reciters?language=ar`);
+        const data = await res.json();
+        allReciters = data.reciters;
+        displayReciters(allReciters);
+    }
+
+    function displayReciters(list) {
+        const container = document.getElementById('mainContent');
+        container.innerHTML = list.map(r => `
+            <div class="card" onclick="viewReciterSurahs('${r.id}')">
+                <strong>${r.name}</strong><br>
+                <small>${r.moshaf[0].name}</small>
+            </div>
+        `).join('');
+    }
+
+    // عرض سور القارئ المختار
+    async function viewReciterSurahs(reciterId) {
+        const reciter = allReciters.find(r => r.id == reciterId);
+        const moshaf = reciter.moshaf[0];
+        const surahList = moshaf.surah_list.split(',');
+
+        const container = document.getElementById('mainContent');
+        container.innerHTML = `<button onclick="loadReciters()" style="background:none; border:1px solid white; color:white; padding:5px 10px; margin-bottom:10px;">← العودة للقراء</button><h3>سور القارئ: ${reciter.name}</h3>`;
+        
+        surahList.forEach(sId => {
+            const sName = allSurahs.find(s => s.id == sId)?.name || `سورة رقم ${sId}`;
+            const url = `${moshaf.server}${sId.padStart(3, '0')}.mp3`;
+            
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<span>${sName}</span>`;
+            div.onclick = () => playAudio(url, `${reciter.name} - ${sName}`);
+            container.appendChild(div);
+        });
+    }
+
+    // جلب الإذاعات
+    async function loadRadios() {
+        showLoading();
+        updateTabs(1);
+        const res = await fetch(`${API_BASE}/radios?language=ar`);
+        const data = await res.json();
+        const container = document.getElementById('mainContent');
+        container.innerHTML = data.radios.map(r => `
+            <div class="card" onclick="playAudio('${r.url}', '${r.name}')">
+                <strong>${r.name}</strong>
+            </div>
+        `).join('');
+    }
+
+    // جلب البث المباشر
+    async function loadLive() {
+        showLoading();
+        updateTabs(2);
+        const res = await fetch(`${API_BASE}/live-tv?language=ar`);
+        const data = await res.json();
+        const container = document.getElementById('mainContent');
+        container.innerHTML = data["live-tv"].map(v => `
+            <div class="card">
+                <strong>${v.name}</strong>
+                <video controls style="width:100%; margin-top:10px; border-radius:8px;">
+                    <source src="${v.url}" type="application/x-mpegURL">
+                    المتصفح لا يدعم البث المباشر هنا.
+                </video>
+            </div>
+        `).join('');
+    }
+
+    // وظائف مساعدة
+    function playAudio(url, title) {
+        const player = document.getElementById('audioPlayer');
+        document.getElementById('nowPlaying').innerText = "يتم الآن تشغيل: " + title;
+        player.src = url;
+        player.play();
+    }
+
+    function showLoading() {
+        document.getElementById('mainContent').innerHTML = '<div class="loading">جاري التحميل...</div>';
+    }
+
+    function updateTabs(index) {
+        const btns = document.querySelectorAll('.tab-btn');
+        btns.forEach((b, i) => b.classList.toggle('active', i === index));
+    }
+
+    function filterData() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allReciters.filter(r => r.name.toLowerCase().includes(query));
+        displayReciters(filtered);
+    }
+
+    init();
 </script>
+
 </body>
 </html>
